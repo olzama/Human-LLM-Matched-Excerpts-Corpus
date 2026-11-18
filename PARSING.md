@@ -46,6 +46,13 @@ All commands run from the repository root.
    jobs exhaust memory; the killed item is recorded as a crash and retried. A run can be
    restarted: finished profiles are skipped and interrupted ones are re-parsed.
 
+   **Forwarding failures.** `scripts/forward_failures.py` runs on the coordinating machine
+   while the first pass is under way. Every 30 minutes it copies finished result profiles back
+   from the other machines, extracts from each finished profile the items that ran out of
+   memory or time or whose ACE process was killed, and sends them as retry profiles to the
+   big-memory machine's queue. Items with no analysis are not retried. A state file lists the
+   profiles already handled, so a restart never forwards an item twice.
+
 5. **Merge.** `scripts/parse_tiered.py merge --skeletons profiles/skeletons --tiers ...`
    rebuilds one complete profile per excerpt. Each item takes its result from the last of the
    given result directories (machines, length parts, retry tiers) that processed it; items
