@@ -1,0 +1,8 @@
+{
+  "_comment": "One entry per subcorpus, keyed by the i-origin value in the profiles. 'key' is the model name used in frequency files (llm-syntax convention: human sources end in -human, models in -llm). Colors are the reference categorical palette, fixed per source.",
+  "human":             {"key": "Novels-1838-1921-human", "label": "Human authors",     "group": "human", "color": "#2a78d6"},
+  "claude_sonnet_5_5": {"key": "ClaudeSonnet5.5-llm",    "label": "Claude Sonnet 5.5", "group": "llm",   "color": "#eb6834"},
+  "gemini_3_1_pro":    {"key": "Gemini3.1Pro-llm",       "label": "Gemini 3.1 Pro",    "group": "llm",   "color": "#1baf7a"},
+  "gpt_6_sol":         {"key": "GPT-6Sol-llm",           "label": "GPT-6 Sol",         "group": "llm",   "color": "#eda100"},
+  "mistral_large_4":   {"key": "MistralLarge4-llm",      "label": "Mistral Large 4",   "group": "llm",   "color": "#e87ba4"}
+}
