@@ -161,3 +161,12 @@ word classes (lexical types grouped by ERG prefix) and syllables per word.
 fit of y = a·x^−b with R² and RMSE; the fitting code is ported from the thesis) at four levels:
 sentence → word in syllables (thesis tokens and lexical items), sentence → clause in words, and
 clause → word in syllables. It writes per-excerpt results, a summary, and plots.
+
+## Comparison with llm-syntax's news data
+
+`analysis/compare_llm_syntax.py` compares the human-vs-LLM differences in this corpus with those in
+llm-syntax's 2025 news data (`analysis/frequencies-json/frequencies-2025.json`; the six 2025 models
+of Gude et al., ACL 2026). For constructions and lexical types (punctuation excluded) it plots each
+type's LLM-vs-human log2 ratio in news against the same ratio here, reports Spearman correlations
+(overall and per model) and how many types deviate in the same or opposite direction, and computes
+Shannon and Simpson diversity for every source of both corpora at one common sample size.
