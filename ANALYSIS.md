@@ -118,3 +118,22 @@ node, belongs to the clause nearest to it in the tree. Clause lengths therefore 
 sentence length. Columns include the number of words and clauses, clause lengths, word lengths in
 characters, derivation depth, the number of constructions and the number of clauses added by
 coordination; see the script's help.
+
+## Distribution plots during parsing
+
+`analysis/plot_distributions.py` plots distributions from whatever has been parsed so far, and
+states on every plot how much data it rests on along its own grouping: per subcorpus, completed
+excerpts and parsed sentences out of all sentences; per work, the same per novel (denominators
+come from `data/items`). It also writes `processing.md`, a table of processing per subcorpus.
+
+```bash
+python analysis/count_types.py --profiles <result roots> --complete-only --out <dir>/counts
+python analysis/sentence_measures.py --profiles <result roots> --complete-only --out <dir>/sentences.tsv
+python analysis/plot_distributions.py --counts <dir>/counts/counts-by-excerpt.jsonl \
+    --sentences <dir>/sentences.tsv --items data/items --out <dir>/plots \
+    --scope "TEST: partial data, ..."
+```
+
+Plots: processing by work; construction rank-frequency; the most frequent constructions and
+lexical types per subcorpus; clauses per sentence; mean clause length by sentence length in
+clauses (Menzerath–Altmann, sentence → clause); mean clauses per sentence by work.
