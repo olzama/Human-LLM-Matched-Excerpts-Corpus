@@ -9,6 +9,9 @@
           length splits, machines) that processed it; writes a provenance table.
   combine Concatenate the merged per-excerpt profiles of each corpus into
           one profile per corpus (ids are globally unique, so no renumbering).
+  track   Per-sentence status over all result roots (parsed, no analysis,
+          out of memory, timeout, crash, not attempted) with each sentence's
+          history of attempts, plus a summary by subcorpus and length band.
   report  Coverage and failure types per corpus for one tier directory.
 
 Profiles that are already complete in --dst are skipped, so `run` can be
@@ -55,8 +58,25 @@ def n_rows(path, table):
         return 0
 
 
+def failure_kind(parse_row):
+    """Finer classification for reporting: parsed / no-analysis / oom / timeout /
+    oom+timeout / crash. ACE writes 'ran out of RAM while ...' for memory and
+    'timeout, ran out of time while ...' for time limits."""
+    o = outcome(parse_row)
+    if o == 'parsed':
+        return 'parsed'
+    if o == 'no-parse':
+        return 'no-analysis'
+    if o == 'crash':
+        return 'crash'
+    err = parse_row['error'] or ''
+    ram = bool(re.search(r'RAM|memory', err, re.I))
+    time_ = bool(re.search(r'time', err, re.I))
+    return 'oom+timeout' if ram and time_ else 'timeout' if time_ else 'oom'
+
+
 def outcome(parse_row):
-    """Classify one parse row: parsed / resource / crash / nogap."""
+    """Classify one parse row for retry decisions: parsed / resource / crash / no-parse."""
     readings = parse_row['readings']
     readings = -1 if readings in (None, '') else int(readings)   # 0 is a real value: no analysis
     err = parse_row['error'] or ''
@@ -111,7 +131,7 @@ def parse_one(src, dst, opts, retry, executable=ACE, retry_outcomes=('resource',
             iid = int(resp['keys']['i-id'])
             err = resp.get('error') or '; '.join(str(e) for e in resp.get('ERRORS', []))
             row = {'readings': resp.get('readings'), 'error': err}
-            print(f"SENT {stamp()} {dst} i-id={iid} words={words.get(iid)} outcome={outcome(row)} "
+            print(f"SENT {stamp()} {dst} i-id={iid} words={words.get(iid)} outcome={failure_kind(row)} "
                   f"secs={int(resp.get('total') or 0) / 1000:.0f} mem_gb={int(resp.get('others') or 0) / 2**30:.1f} "
                   f"error={err!r}", flush=True)
     with ace.ACEParser(GRAMMAR, cmdargs=opts, executable=executable, stderr=open('/dev/null', 'w')) as cpu:
@@ -292,6 +312,59 @@ def cmd_sentences(a):
     print(f"\nfinished items: {sum(outs.values())} ({', '.join(f'{k} {v}' for k, v in outs.most_common())})")
 
 
+def cmd_track(a):
+    """Per-sentence status over all result roots, with the history of attempts."""
+    skel_root = Path(a.skeletons)
+    tiers = []
+    for spec in a.tiers:
+        lab, path = spec.split('=', 1) if '=' in spec else (Path(spec).name, spec)
+        tiers.append((lab, Path(path)))
+    summary = defaultdict(Counter)
+    bands = [(1, 45), (46, 60), (61, 65), (66, 80), (81, 10 ** 9)]
+    band = lambda n: next(f'{lo}-{hi}' if hi < 10 ** 9 else f'{lo}-' for lo, hi in bands if lo <= n <= hi)
+    with open(a.out, 'w', newline='') as fh:
+        w = csv.writer(fh, delimiter='\t')
+        w.writerow(['i-id', 'corpus', 'excerpt_id', 'words', 'length_band', 'status', 'final_tier',
+                    'attempts', 'final_error'])
+        for prof in profiles_under(skel_root):
+            rel = prof.relative_to(skel_root)
+            ts = itsdb.TestSuite(prof)
+            hist = defaultdict(list)
+            for lab, root in tiers:
+                p = root / rel
+                if not (p / 'relations').exists():
+                    continue
+                for row in itsdb.TestSuite(p)['parse']:
+                    hist[row['i-id']].append((lab, row))
+            for item in ts['item']:
+                iid, n = item['i-id'], int(item['i-length'])
+                att = hist.get(iid, [])
+                if att:
+                    lab, last = att[-1]
+                    status, final_tier, err = failure_kind(last), lab, last['error'] or ''
+                else:
+                    status = 'not-attempted:over-limit' if n > a.max_words else 'not-attempted:pending'
+                    final_tier, err = '', ''
+                hist_str = '; '.join(
+                    f"{lab}:{failure_kind(r)}:{(r['total'] or 0) / 1000:.0f}s:{int(r['others'] or 0) / 2**30:.1f}GB"
+                    for lab, r in att)
+                w.writerow([iid, item['i-origin'], item['i-register'], n, band(n), status, final_tier,
+                            hist_str, err])
+                summary[(item['i-origin'], band(n))][status] += 1
+    statuses = ['parsed', 'no-analysis', 'oom', 'timeout', 'oom+timeout', 'crash',
+                'not-attempted:pending', 'not-attempted:over-limit']
+    with open(a.out.rsplit('.', 1)[0] + '-summary.tsv', 'w', newline='') as fh:
+        w = csv.writer(fh, delimiter='\t')
+        w.writerow(['corpus', 'length_band'] + statuses + ['total'])
+        for (c, b), cnt in sorted(summary.items()):
+            w.writerow([c, b] + [cnt.get(s, 0) for s in statuses] + [sum(cnt.values())])
+    tot = Counter()
+    for cnt in summary.values():
+        tot.update(cnt)
+    print('  '.join(f'{s} {tot[s]:,}' for s in statuses if tot[s]))
+    print(f'wrote {a.out} and its -summary.tsv')
+
+
 def cmd_report(a):
     by_corpus = defaultdict(Counter)
     errors = Counter()
@@ -348,10 +421,18 @@ def main():
     se = sub.add_parser('sentences', help='sentence-level progress from a --log-sentences run log')
     se.add_argument('log')
     se.add_argument('--last', type=int, default=30, help='show the N most recent finished items')
+    tr = sub.add_parser('track', help='per-sentence status and attempt history over all result roots')
+    tr.add_argument('--skeletons', required=True, help='full item profiles: <root>/<corpus>/<excerpt>')
+    tr.add_argument('--tiers', nargs='+', required=True,
+                    help='LABEL=DIR result roots, in the order attempts were made (later ones override)')
+    tr.add_argument('--max-words', type=int, default=65,
+                    help='sentences longer than this are reported as not attempted by design')
+    tr.add_argument('--out', required=True, help='output TSV (a -summary.tsv is written next to it)')
     rp = sub.add_parser('report')
     rp.add_argument('dir')
     a = ap.parse_args()
-    {'run': cmd_run, 'merge': cmd_merge, 'combine': cmd_combine, 'sentences': cmd_sentences, 'report': cmd_report}[a.cmd](a)
+    {'run': cmd_run, 'merge': cmd_merge, 'combine': cmd_combine, 'sentences': cmd_sentences, 'track': cmd_track,
+     'report': cmd_report}[a.cmd](a)
 
 
 if __name__ == '__main__':

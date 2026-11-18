@@ -301,9 +301,33 @@ def token_measures(sentence, word_info, n_clauses):
     return toks, [x for x in lengths if x > 0]
 
 
+
+def profile_dirs(roots, complete_only=False):
+    """relations files of all profiles under the roots; with complete_only, only
+    profiles whose parse table has a row for every item."""
+    from delphin import tsdb
+    def rows(path, table):
+        try:
+            with tsdb.open(path, table) as fh:
+                return sum(1 for _ in fh)
+        except Exception:
+            return 0
+    out = []
+    for root in roots:
+        for rel in sorted(Path(root).rglob('relations')):
+            if complete_only:
+                n = rows(rel.parent, 'item')
+                if n == 0 or rows(rel.parent, 'parse') != n:
+                    continue
+            out.append(rel)
+    return out
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    ap.add_argument('--profiles', required=True, help='root of parsed profiles (searched recursively)')
+    ap.add_argument('--profiles', required=True, nargs='+',
+                    help='one or more roots of parsed profiles (searched recursively)')
+    ap.add_argument('--complete-only', action='store_true',
+                    help='skip profiles that are still being parsed (fewer parse rows than items)')
     ap.add_argument('--clauses', default=str(HERE / 'clauses' / 'finite.txt'),
                     help='file listing the constructions that build a clause')
     ap.add_argument('--clause-markers', default=str(HERE / 'clauses' / 'markers.txt'),
@@ -334,7 +358,7 @@ def main():
     with open(a.out, 'w', newline='', encoding='utf-8') as fh:
         w = csv.writer(fh, delimiter='\t')
         w.writerow(cols)
-        for rel in sorted(Path(a.profiles).rglob('relations')):
+        for rel in profile_dirs(a.profiles, a.complete_only):
             for item in itsdb.TestSuite(rel.parent).processed_items():
                 ex = item['i-register']
                 row = {'corpus': item['i-origin'], 'excerpt': ex, 'work': ex.rsplit('_', 1)[0],

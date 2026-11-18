@@ -110,9 +110,33 @@ def new_record():
             'depth': {d: Counter() for d in DEPTHS}}
 
 
+
+def profile_dirs(roots, complete_only=False):
+    """relations files of all profiles under the roots; with complete_only, only
+    profiles whose parse table has a row for every item."""
+    from delphin import tsdb
+    def rows(path, table):
+        try:
+            with tsdb.open(path, table) as fh:
+                return sum(1 for _ in fh)
+        except Exception:
+            return 0
+    out = []
+    for root in roots:
+        for rel in sorted(Path(root).rglob('relations')):
+            if complete_only:
+                n = rows(rel.parent, 'item')
+                if n == 0 or rows(rel.parent, 'parse') != n:
+                    continue
+            out.append(rel)
+    return out
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    ap.add_argument('--profiles', required=True, help='root of parsed profiles (searched recursively)')
+    ap.add_argument('--profiles', required=True, nargs='+',
+                    help='one or more roots of parsed profiles (searched recursively)')
+    ap.add_argument('--complete-only', action='store_true',
+                    help='skip profiles that are still being parsed (fewer parse rows than items)')
     ap.add_argument('--erg', default=str(DEFAULT_ERG), help='ERG source directory used for parsing')
     ap.add_argument('--sources', default=str(Path(__file__).with_name('sources.json')))
     ap.add_argument('--out', required=True)
@@ -121,7 +145,7 @@ def main():
     sources = {k: v for k, v in json.load(open(a.sources)).items() if not k.startswith('_')}
     ancestry = Ancestry(load_types(a.erg))
     records = defaultdict(new_record)
-    for rel in sorted(Path(a.profiles).rglob('relations')):
+    for rel in profile_dirs(a.profiles, a.complete_only):
         ts = itsdb.TestSuite(rel.parent)
         for item in ts.processed_items():
             corpus, excerpt, n = item['i-origin'], item['i-register'], int(item['i-length'])

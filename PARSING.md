@@ -65,7 +65,14 @@ All commands run from the repository root.
    that none processed are reported as missing. A provenance table records, for every item,
    where its result came from and its outcome.
 
-6. **Combine.** `scripts/parse_tiered.py combine` concatenates the merged excerpt profiles
+6. **Track.** `scripts/parse_tiered.py track --skeletons profiles/skeletons --tiers LABEL=DIR ...`
+   writes one row per sentence of the corpus with its final status — parsed, no analysis (the
+   grammar has no analysis), out of memory, timeout, crash, or not attempted (over the length
+   limit, or still pending) — and the history of all its attempts (tier, outcome, seconds, peak
+   memory), plus a summary by subcorpus and length band. Out of memory and timeouts are kept
+   apart from no-analysis throughout.
+
+7. **Combine.** `scripts/parse_tiered.py combine` concatenates the merged excerpt profiles
    into one profile per subcorpus. `report` prints coverage and ACE error messages per corpus.
 
 ## Memory and time
