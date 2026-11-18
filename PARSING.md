@@ -35,8 +35,10 @@ All commands run from the repository root.
    With `--sample N` it builds a length-stratified pilot set instead.
 
 3. **Split by length.** `scripts/split_by_length.py` divides each excerpt profile into short
-   (≤ 45 words) and long items, and deals the short profiles out to machines in proportion to
-   their capacity (`--weights`). Every item lands in exactly one part.
+   items (≤ 45 words) and long items in bands (`--long-bands 60,80` gives 46–60, 61–80 and
+   over 80 words), and deals the short profiles out to machines in proportion to their
+   capacity (`--weights`). Every item lands in exactly one part. `--parts long` rewrites only
+   the long bands, leaving short profiles that are being parsed untouched.
 
 4. **Parse.** `scripts/parse_tiered.py run` parses every profile under `--src` into `--dst`,
    with `--workers` parallel ACE processes. `--retry` re-parses only the items of a previous
