@@ -1,0 +1,14 @@
+# finite.txt plus non-finite and reduced clauses.
+# One construction name per line; "#" starts a comment. Used by sentence_measures.py.
+sb-hd_mc_c
+sb-hd_nmc_c
+hd_xsb-fin_c
+hd_imp_c
+vp_rc-redrel_c          # reduced relative ("the man sitting there")
+vp_sbrd-prd-prp_c       # subordinate predicative, present participle
+vp_sbrd-prd-pas_c       # subordinate predicative, passive participle
+vp_sbrd-prd-aj_c        # subordinate predicative, adjectival
+vp_sbrd-pre_c           # subordinate clause, preposed
+vp_np-ger_c             # gerund
+cl_rc-inf-nwh_c         # infinitival relative
+cl_rc-inf-nwh-sb_c      # infinitival relative with subject

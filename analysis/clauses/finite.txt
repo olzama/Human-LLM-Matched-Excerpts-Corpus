@@ -1,0 +1,6 @@
+# Constructions that build a clause: finite clauses with their subject accounted for.
+# One construction name per line; '#' starts a comment. Used by sentence_measures.py.
+sb-hd_mc_c        # subject-head, main clause
+sb-hd_nmc_c       # subject-head, non-main clause
+hd_xsb-fin_c      # finite clause whose subject is a gap on SLASH ("[who] left" in a relative)
+hd_imp_c          # imperative

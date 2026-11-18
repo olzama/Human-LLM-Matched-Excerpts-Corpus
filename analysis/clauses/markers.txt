@@ -1,0 +1,9 @@
+# Clause markers: their words are counted with the clause they introduce, not
+# with the clause above. One entry per line ('#' starts a comment); shell-style
+# wildcards allowed. An entry is matched against
+#   - lexical types of words: a matching word joins the nearest clause below the
+#     node where it combines (complementizers take the clause as a complement);
+#   - construction names: words in the non-clause daughter of a matching
+#     construction join the clause in its other daughter.
+cm_*              # complementizers: that, whether, if, for, to (lexical types cm_...)
+mrk-nh_cl_c       # marker + clause construction

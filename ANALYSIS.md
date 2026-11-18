@@ -76,3 +76,25 @@ entry, and the human-minus-LLM differences with 95% intervals (Markdown, JSON an
 `--unpaired` resamples each subcorpus's own excerpts independently, for data whose excerpts are
 not matched (such as the pilot sample); `--no-bootstrap` only subsamples. With
 `--no-bootstrap --size` equal to a subcorpus's total, its result equals `diversity.py`'s.
+
+## Per-sentence measures
+
+`analysis/sentence_measures.py` writes one row per sentence with structural measures from the
+top-ranked derivation, for quantitative-linguistic analyses such as the Menzerath–Altmann law at
+the sentence → clause → word levels:
+
+```bash
+python analysis/sentence_measures.py --profiles <merged profiles root> --out sentences.tsv \
+    [--clauses analysis/clauses/finite.txt] [--clause-markers analysis/clauses/markers.txt]
+```
+
+What counts as a clause is set entirely by the `--clauses` file: one construction name per line.
+`clauses/finite.txt` lists the constructions that build finite clauses (subject–head, main and
+non-main; a finite clause whose subject is a gap on SLASH; imperatives);
+`clauses/finite+nonfinite.txt` adds non-finite and reduced clauses. Each word (a non-punctuation
+lexical item) belongs to its nearest clause; a word outside every clause, such as a sentence-initial
+modifier that combines with the clause above the subject–head node, belongs to the clause nearest
+to it in the tree. Clause lengths therefore add up to the sentence length. Words listed in
+`--clause-markers` (complementizers, by lexical type `cm_*`) are counted with the clause they
+introduce. Columns include the number of words and clauses, clause lengths, word lengths in
+characters, derivation depth and the number of constructions; see the script's help.
