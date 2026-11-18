@@ -76,12 +76,15 @@ are never retried at a setting already known to fail for their length.
 
 | Length (words) | First attempt | Retries |
 |---|---|---|
-| ≤ 45 | 16 GB, 120 s | 28 GB → 60 GB → 120 GB |
-| 46–60 | 28 GB, 300 s | 60 GB → 120 GB |
-| 61–80 | 60 GB, 600 s | 120 GB |
-| over 80 | largest setting only | — |
+| ≤ 45 | 16 GB, 120 s | 28 GB, 300 s → 60 GB, 600 s |
+| 46–60 | 28 GB, 300 s | 60 GB, 600 s |
+| 61–65 | 120 GB, 1,800 s | — |
+| over 65 | not parsed | — |
 
-The settings above the first row are under test and may change.
+The upper limits come from tests on sentences that had failed at lower settings: at 60 GB, one of
+two sentences of 61–80 words parsed (64 words); at 120 GB and at 200 GB with up to an hour each,
+none of six sentences of 66–69 words parsed. Sentences over 65 words are kept in the profiles and
+reported as not parsed.
 
 ## Other machines
 
