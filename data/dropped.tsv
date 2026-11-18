@@ -1,0 +1,560 @@
+corpus	excerpt_id	sent_idx	piece_idx	reason	raw
+human	barclay_ladies_15	32	0	chapter-heading	CHAPTER XIV
+human	barclay_postern_11	8	1	scene-break	      *      *      *      *      *
+human	barclay_postern_12	13	1	scene-break	      *      *      *      *      *
+human	barclay_postern_25	7	1	scene-break	      *      *      *      *      *
+human	barclay_rosary_13	48	0	chapter-heading	CHAPTER IX
+human	barclay_rosary_16	81	0	scene-break	*      *      *      *      *
+human	barclay_rosary_34	27	0	chapter-heading	CHAPTER XVII
+human	barclay_rosary_68	0	0	no-letters	""""
+human	barclay_rosary_68	51	1	chapter-heading	\nCHAPTER XXXVIII
+human	blackmore_erema_48	32	1	chapter-heading	CHAPTER XXIX
+human	blackmore_erema_48	0	0	truncated-start	and then prayed that the\nwill of the Lord might be done.
+human	blackmore_lorna_154	21	0	chapter-heading	CHAPTER LXV
+human	blackmore_springhaven_127	52	0	chapter-heading	CHAPTER LXIV
+human	blackmore_springhaven_30	43	0	chapter-heading	CHAPTER XX
+human	blackmore_springhaven_70	62	0	chapter-heading	CHAPTER XXXIX
+human	braddon_audley_14	70	0	chapter-heading	CHAPTER VIII.
+human	braddon_audley_74	15	0	chapter-heading	CHAPTER XXXIII.
+human	braddon_fortune_26	2	0	chapter-heading	CHAPTER XII.
+human	braddon_fortune_91	26	0	chapter-heading	CHAPTER XXXVI.
+human	braddon_quest_112	55	0	chapter-heading	CHAPTER XLVII.
+human	braddon_quest_62	39	0	chapter-heading	CHAPTER XXVII.
+human	burnett_garden_27	109	1	chapter-heading	\nCHAPTER XV
+human	burnett_garden_41	37	0	chapter-heading	CHAPTER XXII
+human	burnett_garden_49	0	0	no-letters	""""
+human	burnett_garden_49	26	1	chapter-heading	\nCHAPTER XXVI
+human	burnett_lord_8	94	1	roman-numeral	\nIII
+human	burnett_princess_30	30	0	no-letters	14
+human	burnett_princess_6	33	1	no-letters	4
+human	cbronte_jane_106	0	0	no-letters	""""
+human	cbronte_jane_106	47	0	chapter-heading	CHAPTER XXXIV
+human	cbronte_jane_106	72	1	truncated-end	"""My first aim will be to _clean down_ (do you comprehend the full force\nof the expression?)--to _clean down_"
+human	cbronte_jane_53	9	1	chapter-heading	\nCHAPTER XIX
+human	cbronte_shirley_86	23	0	chapter-heading	CHAPTER XXII.
+human	chesterton_innocence_23	70	0	scene-break	* * * * *
+human	chesterton_napoleon_14	0	0	no-letters	""""
+human	chesterton_napoleon_14	80	0	chapter-heading	BOOK III
+human	chesterton_napoleon_14	80	1	chapter-heading	\nCHAPTER I--_The Mental Condition of Adam Wayne_
+human	chesterton_napoleon_2	23	0	chapter-heading	CHAPTER II--_The Man in Green_
+human	chesterton_napoleon_23	5	0	illustration	[Illustration: Map of the SEAT of WAR.]
+human	chesterton_napoleon_27	27	1	chapter-heading	\nCHAPTER III--_The Great Army of South Kensington_
+human	chesterton_thursday_5	56	0	chapter-heading	CHAPTER III.
+human	chesterton_thursday_5	0	0	truncated-start	he roared so that the room\nshook.
+human	collins_basil_23	36	1	chapter-heading	\nPART II.
+human	collins_basil_23	36	2	roman-numeral	\nI.
+human	collins_legacy_27	0	0	truncated-start	she asked.
+human	collins_legacy_29	29	0	chapter-heading	CHAPTER XXVI.
+human	collins_legacy_49	110	0	chapter-heading	CHAPTER XLI.
+human	collins_woman_116	52	1	roman-numeral	\nV
+human	corelli_romance_5	80	1	chapter-heading	\nCHAPTER III.
+human	corelli_romance_8	89	0	chapter-heading	CHAPTER IV.
+human	corelli_satan_12	0	0	no-letters	""""
+human	corelli_satan_12	69	2	roman-numeral	\nVI
+human	corelli_satan_33	80	0	truncated-end	The music swelled into\npassionate cadence,--melodies crossed and re-crossed each other like\nrays of light glittering among green leaves,--voices of birds and\nstreams and tossing waterfalls chimed in with songs of love and playful\nmerriment;--anon came wilder strains of grief and angry clamour; cries\nof despair were heard echoing through the thunderous noise of some\nrelentless storm,--farewells everlastingly shrieked amid sobs of\nreluctant shuddering agony;--and then, as I listened, before my eyes a\nblack mist gathered slowly, and I thought I saw great rocks bursting\nasunder into flame, and drifting islands in a sea of fire,--faces,\nwonderful, hideous, beautiful, peered at me out of a darkness denser\nthan night, and in the midst of this there came a tune, complete in\nsweetness and suggestion,--a piercing sword-like tune that plunged into\nmy very heart and rankled there,----my breath failed me,--my senses\nswam,--I felt that I must move, speak, cry out, and implore that this\nmusic, this horribly insidious music should cease ere
+human	corelli_satan_57	35	0	roman-numeral	XXIII
+human	corelli_satan_83	51	0	roman-numeral	XXXII
+human	corelli_satan_83	0	0	truncated-start	you think I will live with him\nafter what he has seen and heard to-night?
+human	dickens_expectations_55	5	0	chapter-heading	Chapter XXVII
+human	dickens_expectations_7	81	1	chapter-heading	\nChapter V
+human	dickens_oliver_58	7	0	chapter-heading	CHAPTER XXXII
+human	dickens_oliver_89	52	0	chapter-heading	CHAPTER XLVII
+human	doyle_hound_10	0	0	no-letters	""""
+human	doyle_lost_16	0	0	no-letters	""""
+human	doyle_lost_16	47	0	chapter-heading	CHAPTER VIII
+human	doyle_lost_19	44	0	chapter-heading	CHAPTER IX
+human	doyle_lost_3	108	1	chapter-heading	\n                           CHAPTER III
+human	doyle_micah_18	0	0	no-letters	""""
+human	doyle_micah_50	30	0	chapter-heading	Chapter XIX.
+human	eliot_adam_29	0	0	no-letters	""""
+human	eliot_felix_37	37	1	chapter-heading	\nCHAPTER XII.
+human	eliot_felix_54	79	0	chapter-heading	CHAPTER XXI.
+human	forster_angels_17	64	0	chapter-heading	Chapter 6
+human	forster_angels_25	21	0	roman-numeral	I.
+human	forster_angels_4	15	0	chapter-heading	Chapter 2
+human	forster_howards_27	42	0	chapter-heading	Chapter 15
+human	forster_howards_36	4	0	chapter-heading	Chapter 19
+human	forster_howards_50	43	0	chapter-heading	Chapter 27
+human	forster_howards_53	95	0	chapter-heading	Chapter 30
+human	gaskell_lovers_42	0	0	no-letters	'
+human	gaskell_lovers_42	35	0	chapter-heading	CHAPTER XIV
+human	gaskell_lovers_62	45	0	chapter-heading	CHAPTER XXII
+human	gaskell_ruth_24	48	1	chapter-heading	\nCHAPTER X
+human	gaskell_ruth_36	29	0	chapter-heading	CHAPTER XV
+human	gaskell_wives_34	59	0	illustration	[Illustration: THE NEW MAMMA.]
+human	gissing_unclassed_52	61	0	chapter-heading	CHAPTER XXIV
+human	gissing_unclassed_75	10	1	chapter-heading	\nCHAPTER XXXV
+human	gissing_warburton_17	37	1	chapter-heading	\nCHAPTER 16
+human	gissing_warburton_39	12	0	chapter-heading	CHAPTER 34
+human	gissing_warburton_39	95	0	chapter-heading	CHAPTER 35
+human	gissing_warburton_5	23	1	chapter-heading	\nCHAPTER 5
+human	gissing_warburton_5	58	0	chapter-heading	CHAPTER 6
+human	gissing_warburton_8	44	0	chapter-heading	CHAPTER 9
+human	gissing_women_81	32	0	chapter-heading	CHAPTER XXVIII
+human	gissing_women_88	20	0	chapter-heading	CHAPTER XXX
+human	haggard_mines_49	1	0	chapter-heading	CHAPTER XVIII
+human	haggard_mines_54	39	0	scene-break	*      *      *      *      *
+human	haggard_mist_21	74	1	chapter-heading	CHAPTER XI
+human	haggard_mist_56	0	0	no-letters	""""
+human	haggard_mist_56	41	1	chapter-heading	CHAPTER XXV
+human	haggard_sheallan_31	13	0	chapter-heading	CHAPTER X
+human	haggard_sheallan_56	13	0	chapter-heading	CHAPTER XVIII
+human	hardy_jude_17	15	0	chapter-heading	Part Second
+human	hardy_jude_17	18	0	roman-numeral	I
+human	hardy_jude_33	68	0	roman-numeral	IV
+human	hardy_madding_22	35	1	chapter-heading	\nCHAPTER XIV
+human	hardy_madding_79	11	0	chapter-heading	CHAPTER LI
+human	hardy_tess_1	0	4	roman-numeral	\nI
+human	hardy_tess_1	0	0	title	﻿TESS OF THE D'URBERVILLES
+human	hardy_tess_1	0	1	title	A Pure Woman
+human	hardy_tess_21	25	0	roman-numeral	XIV
+human	hardy_tess_75	57	2	roman-numeral	XLV
+human	james_ambassadors_17	23	0	chapter-heading	Book Third
+human	james_ambassadors_17	23	1	roman-numeral	\nI
+human	james_ambassadors_48	105	0	chapter-heading	Volume II
+human	james_ambassadors_48	105	1	chapter-heading	Book Seventh
+human	james_ambassadors_48	105	2	roman-numeral	\nI
+human	kipling_captains_30	0	0	no-letters	""""
+human	kipling_kim_19	10	0	chapter-heading	Chapter 5
+human	kipling_kim_45	35	0	chapter-heading	Chapter 11
+human	kipling_kim_45	41	0	no-letters	15
+human	kipling_kim_65	25	0	chapter-heading	Chapter 15
+human	kipling_light_24	82	0	chapter-heading	CHAPTER IX
+human	lytton_kenelm_40	15	0	chapter-heading	CHAPTER III.
+human	lytton_novel_194	55	0	chapter-heading	CHAPTER XXIII.
+human	lytton_novel_70	15	1	chapter-heading	\nCHAPTER XVIII.
+human	lytton_novel_70	49	0	chapter-heading	CHAPTER XIX.
+human	lytton_novel_76	62	0	chapter-heading	BOOK FIFTH.
+human	lytton_novel_76	85	1	chapter-heading	\nCHAPTER II.
+human	lytton_what_28	30	0	chapter-heading	CHAPTER VII.
+human	lytton_what_28	83	0	chapter-heading	CHAPTER VIII.
+human	lytton_what_61	49	1	chapter-heading	\nCHAPTER XXIV.
+human	meredith_marriage_37	87	1	chapter-heading	\nCHAPTER XVIII.
+human	meredith_marriage_88	0	0	title	THE RETARDED COURTSHIP
+human	meredith_richmond_137	0	0	truncated-start	let him ask his heels.
+human	meredith_richmond_91	44	1	chapter-heading	\nCHAPTER XXXIX.
+human	morris_roots_7	6	0	chapter-heading	CHAPTER IV.
+human	morris_roots_70	8	1	chapter-heading	CHAPTER XXXVIII.
+human	morris_roots_97	19	0	chapter-heading	CHAPTER LVI.  TALK UPON THE WILD-WOOD WAY
+human	morris_roots_97	40	0	chapter-heading	CHAPTER LVII.
+human	morris_water_35	17	0	chapter-heading	CHAPTER III.
+human	morris_water_48	10	0	chapter-heading	CHAPTER IV.  OF THE SLAYING OF FRIEND AND FOE
+human	morris_water_83	32	0	chapter-heading	CHAPTER XXII.
+human	morris_wood_20	0	0	no-letters	""""
+human	morris_wood_20	19	0	chapter-heading	CHAPTER XXI:
+human	morris_wood_20	50	0	chapter-heading	CHAPTER XXII: OF THE DWARF AND THE PARDON
+human	morris_wood_22	12	1	chapter-heading	\nCHAPTER XXIV:
+human	morris_wood_32	8	1	chapter-heading	\nCHAPTER XXXV: OF THE KING OF STARK-WALL AND HIS QUEEN
+human	stevenson_arrow_38	0	0	truncated-start	"could ye not smell harm and get ye gone from evil?"""
+human	stevenson_arrow_4	0	0	no-letters	""""
+human	stevenson_arrow_4	41	1	chapter-heading	\nBOOK
+human	stevenson_arrow_4	42	0	roman-numeral	I
+human	stevenson_arrow_4	42	2	chapter-heading	\nCHAPTER I
+human	stevenson_arrow_4	66	0	illustration	"[Illustration: _""Now, mark me, mine host,"" Sir Daniel said, ""follow but\nmine orders, and I shall be your good lord ever""_]"
+human	stevenson_island_20	90	0	chapter-heading	PART FOUR--The Stockade
+human	stevenson_island_20	90	1	no-letters	\n16
+human	stevenson_island_9	0	0	no-letters	""""
+human	stevenson_island_9	40	1	chapter-heading	\nPART TWO--The Sea-cook
+human	stevenson_island_9	40	2	no-letters	\n7
+human	thackeray_esmond_39	57	0	chapter-heading	CHAPTER XIV.
+human	thackeray_esmond_70	16	0	chapter-heading	CHAPTER XII.
+human	thackeray_pendennis_117	34	0	chapter-heading	CHAPTER XXXIX.
+human	thackeray_pendennis_18	51	0	chapter-heading	CHAPTER VI.
+human	thackeray_pendennis_183	47	0	chapter-heading	CHAPTER LX.
+human	thackeray_virginians_144	0	0	truncated-start	cries Theo.
+human	thackeray_virginians_207	13	1	chapter-heading	\nCHAPTER LXXXIV.
+human	trollope_phineas_52	41	1	chapter-heading	\nCHAPTER XXIV
+human	trollope_warden_16	46	0	chapter-heading	Chapter VIII
+human	trollope_warden_5	25	0	chapter-heading	Chapter III
+human	ward_ashe_3	39	0	roman-numeral	II
+human	ward_ashe_32	70	0	scene-break	*       *       *       *       *
+human	ward_ashe_65	33	0	scene-break	*       *       *       *       *
+human	ward_ashe_92	18	0	scene-break	*       *       *       *       *
+human	ward_harvest_14	70	0	scene-break	*       *       *       *       *
+human	ward_harvest_14	90	0	roman-numeral	V
+human	ward_harvest_29	0	0	truncated-start	he said, as soon as the cough would let him.
+human	ward_milly_9	1	0	illustration	"[Illustration: ""The flowers Milly gathered for her mother""]"
+claude_sonnet_5_5	corelli_romance_62	0	0	bold-heading	**From Chapter the Ninth: The Fen-Farm**
+claude_sonnet_5_5	dickens_expectations_24	0	0	bold-heading	**CHAPTER THE NINTH**
+claude_sonnet_5_5	doyle_lost_3	0	0	title	THE HOUR OF THE GEOLOGIST
+claude_sonnet_5_5	gaskell_ruth_33	51	0	truncated-end	Then, with the air of a person who has been given an order by someone she cannot see, she went back to the kitchen, put the kettle on the range, took down from the dresser the second-best cups, and began, with a face of perfect composure, to rehearse in her mind a speech of welcome that she knew
+claude_sonnet_5_5	kipling_kim_63	0	0	title	Of the Road to Sarnagar, and the Two Who Overtook Me
+claude_sonnet_5_5	lytton_kenelm_117	0	0	title	THE LEDGER IN THE ATTIC
+claude_sonnet_5_5	lytton_novel_194	0	0	bold-heading	**Chapter the Ninth: The Clock in the Back Parlour**
+claude_sonnet_5_5	meredith_feverel_33	0	0	bold-heading	**The Ascent of Mr. Tolliver**
+claude_sonnet_5_5	morris_wood_22	0	0	chapter-heading	Chapter the Ninth: The Reckoning at Harrowmere
+claude_sonnet_5_5	thackeray_esmond_80	0	0	bold-heading	**The Curate of Saint Aldhelm's**
+mistral_large_4	barclay_ladies_15	0	0	title	The Keeper's Vigil
+mistral_large_4	barclay_ladies_27	0	1	md-heading	## Part One: The Convent Road
+mistral_large_4	barclay_ladies_27	23	0	scene-break	---
+mistral_large_4	barclay_ladies_27	0	0	title	The Palfrey's Silvery Mane
+mistral_large_4	barclay_ladies_47	0	1	md-heading	## An Excerpt
+mistral_large_4	barclay_ladies_47	0	2	scene-break	---
+mistral_large_4	barclay_ladies_47	0	0	title	The Orchard of His Doubts
+mistral_large_4	barclay_ladies_55	0	1	md-heading	## An Excerpt
+mistral_large_4	barclay_ladies_55	0	0	title	The Cloister and the Rose
+mistral_large_4	barclay_postern_11	0	1	md-heading	## Chapter XIV: *Of Debts and Discoveries*
+mistral_large_4	barclay_postern_11	26	1	scene-break	---
+mistral_large_4	barclay_postern_11	0	0	title	The Cartographer's Inheritance
+mistral_large_4	barclay_postern_12	49	0	scene-break	---
+mistral_large_4	barclay_postern_12	89	2	scene-break	---
+mistral_large_4	barclay_postern_12	0	0	title	The Waiting Room of the Blackfriars Line
+mistral_large_4	barclay_postern_2	0	0	title	The Final Set of Mrs. Aldridge's Garden
+mistral_large_4	barclay_rosary_34	0	1	md-heading	## An Excerpt
+mistral_large_4	barclay_rosary_34	0	0	title	The Sealed Chamber
+mistral_large_4	barclay_rosary_68	0	0	title	The Keeper's Song
+mistral_large_4	blackmore_erema_106	9	0	scene-break	---
+mistral_large_4	blackmore_erema_106	44	0	scene-break	---
+mistral_large_4	blackmore_erema_106	0	0	title	The Weight of Inheritance
+mistral_large_4	blackmore_erema_48	0	0	title	The Old Governess of Thornwick Hall
+mistral_large_4	blackmore_erema_5	0	1	chapter-heading	Chapter Seventeen
+mistral_large_4	blackmore_erema_5	0	0	title	The Cart in the Lane
+mistral_large_4	blackmore_lorna_12	0	1	md-heading	## Chapter XI: The Matter of the Gun
+mistral_large_4	blackmore_lorna_12	0	2	scene-break	---
+mistral_large_4	blackmore_lorna_12	0	0	title	The Heir of Thornwick
+mistral_large_4	blackmore_lorna_154	0	1	md-heading	## Excerpt
+mistral_large_4	blackmore_lorna_154	0	0	title	The Last of the Grasslands
+mistral_large_4	blackmore_lorna_65	0	1	scene-break	##
+mistral_large_4	blackmore_lorna_65	0	0	title	The Pony at Halfpenny Gate
+mistral_large_4	blackmore_lorna_65	1	0	title	An Excerpt
+mistral_large_4	blackmore_springhaven_112	0	1	md-heading	## A Fragment of Domestic Annals
+mistral_large_4	blackmore_springhaven_112	39	0	scene-break	---
+mistral_large_4	blackmore_springhaven_112	0	0	title	The Cartographer's Misfortune
+mistral_large_4	blackmore_springhaven_127	0	1	md-heading	## From the Journals of a Collector of Maritime Correspondence
+mistral_large_4	blackmore_springhaven_127	0	2	scene-break	---
+mistral_large_4	blackmore_springhaven_127	46	0	scene-break	---
+mistral_large_4	blackmore_springhaven_127	0	0	title	The Salt Ledger
+mistral_large_4	braddon_audley_14	2	0	scene-break	---
+mistral_large_4	braddon_audley_15	26	0	scene-break	---
+mistral_large_4	braddon_audley_15	72	1	scene-break	---
+mistral_large_4	braddon_audley_15	0	0	title	The Unquiet Pasture
+mistral_large_4	braddon_audley_35	0	0	title	The Iron Key and the Leather Grip
+mistral_large_4	braddon_audley_74	0	1	md-heading	## Chapter VII
+mistral_large_4	braddon_audley_74	0	0	title	The Lighthouse Keeper's Account
+mistral_large_4	braddon_fortune_40	0	1	md-heading	## Chapter XIV
+mistral_large_4	braddon_fortune_40	0	2	md-heading	## In Which Mrs. Aldous Makes a Discovery
+mistral_large_4	braddon_fortune_40	0	3	scene-break	---
+mistral_large_4	braddon_fortune_40	0	0	title	The Room at the Top of the House
+mistral_large_4	braddon_fortune_91	1	0	scene-break	---
+mistral_large_4	braddon_quest_12	1	0	scene-break	---
+mistral_large_4	burnett_garden_49	0	1	md-heading	## An Excerpt
+mistral_large_4	burnett_garden_49	0	0	title	The Last Lecture
+mistral_large_4	burnett_lord_15	1	0	scene-break	---
+mistral_large_4	burnett_lord_9	1	0	scene-break	---
+mistral_large_4	burnett_princess_20	1	0	scene-break	---
+mistral_large_4	burnett_princess_20	1	1	md-heading	# Excerpt from *
+mistral_large_4	burnett_princess_20	2	1	md-heading	## Chapter VII:
+mistral_large_4	burnett_princess_30	0	0	title	The Weight of Unspoken Things
+mistral_large_4	burnett_princess_6	0	1	chapter-heading	Chapter XIV
+mistral_large_4	burnett_princess_6	0	0	title	The Little Things
+mistral_large_4	cbronte_jane_106	0	1	md-heading	## Chapter the Tenth
+mistral_large_4	cbronte_jane_106	0	0	title	The Grammar of Hunger
+mistral_large_4	cbronte_jane_51	64	0	scene-break	---
+mistral_large_4	cbronte_jane_53	0	1	chapter-heading	Part the First: Of What the Darkness Holds
+mistral_large_4	cbronte_jane_53	43	0	scene-break	---
+mistral_large_4	cbronte_jane_53	43	1	chapter-heading	Part the Second: Of What the Ledger Records
+mistral_large_4	cbronte_jane_53	0	0	title	The Ember Keeper's Ledger
+mistral_large_4	cbronte_jane_70	0	0	md-heading	# Excerpt from *
+mistral_large_4	cbronte_jane_70	1	1	md-heading	## Chapter VII:
+mistral_large_4	cbronte_jane_70	1	0	title	The Valley of Unspoken Things*
+mistral_large_4	cbronte_jane_70	2	0	title	Of What the Heart Shall Endure
+mistral_large_4	cbronte_shirley_112	0	1	md-heading	## I.
+mistral_large_4	cbronte_shirley_112	0	0	title	The Governess's Reckoning
+mistral_large_4	cbronte_shirley_86	0	0	md-heading	# Excerpt from *The Burden of Open Doors*
+mistral_large_4	cbronte_shirley_86	0	1	md-heading	## Chapter XIV: The Governor's Season
+mistral_large_4	cbronte_villette_56	3	0	scene-break	---
+mistral_large_4	cbronte_villette_82	0	0	title	The Professor's Evening
+mistral_large_4	cbronte_villette_89	0	1	md-heading	## An Excerpt
+mistral_large_4	cbronte_villette_89	0	0	title	The Weight of the Desk
+mistral_large_4	chesterton_innocence_23	0	0	title	The Cartographer's Burden
+mistral_large_4	chesterton_innocence_8	1	0	scene-break	---
+mistral_large_4	chesterton_napoleon_14	0	1	md-heading	## Chapter the Seventh: Where the Guns Fall Silent
+mistral_large_4	chesterton_napoleon_14	0	0	title	The Wanderer's Wand
+mistral_large_4	chesterton_napoleon_2	79	0	scene-break	---
+mistral_large_4	chesterton_napoleon_2	0	0	title	The Cartographer's Eye
+mistral_large_4	chesterton_napoleon_23	0	0	title	The Night Comes Early on Cinder Row
+mistral_large_4	chesterton_thursday_29	0	0	title	The First Turn of the Wheel
+mistral_large_4	collins_basil_18	0	1	md-heading	## An Original Excerpt
+mistral_large_4	collins_basil_18	0	0	title	The Glass Room
+mistral_large_4	collins_basil_23	0	0	title	The Clock of Hollow Lane
+mistral_large_4	collins_basil_42	0	0	title	The Weight of Unspoiled Things
+mistral_large_4	collins_basil_69	0	0	title	The Cartographer's Confession
+mistral_large_4	collins_legacy_29	0	0	title	The Private Correspondence
+mistral_large_4	collins_legacy_49	0	0	title	The Inheritance of Quiet Things
+mistral_large_4	collins_legacy_58	0	1	md-heading	## Part the First
+mistral_large_4	collins_legacy_58	0	0	title	The Physician's Ledger
+mistral_large_4	collins_woman_108	0	1	md-heading	## Chapter IV: Concerning Several Matters, Chief Among Them a Ledger Book
+mistral_large_4	collins_woman_108	0	0	title	The House of Rest on Thornwick Lane
+mistral_large_4	collins_woman_116	12	0	scene-break	---
+mistral_large_4	collins_woman_116	28	0	scene-break	---
+mistral_large_4	collins_woman_5	0	1	md-heading	## Chapter VII: On the Matter of the Conservatory
+mistral_large_4	collins_woman_5	0	2	scene-break	---
+mistral_large_4	collins_woman_5	63	0	scene-break	---
+mistral_large_4	collins_woman_5	0	0	title	The Ledger of Unspoken Things
+mistral_large_4	corelli_innocent_46	0	1	roman-numeral	I.
+mistral_large_4	corelli_innocent_46	22	1	roman-numeral	II.
+mistral_large_4	corelli_innocent_46	48	0	roman-numeral	III.
+mistral_large_4	corelli_innocent_46	0	0	title	The Garret at Number Seven
+mistral_large_4	corelli_innocent_49	0	1	md-heading	## An Excerpt
+mistral_large_4	corelli_innocent_49	0	2	scene-break	---
+mistral_large_4	corelli_innocent_49	0	0	title	The Curator of Forgotten Pages
+mistral_large_4	corelli_romance_17	77	0	scene-break	---
+mistral_large_4	corelli_romance_5	1	0	scene-break	---
+mistral_large_4	corelli_romance_62	0	0	title	The Mere Water
+mistral_large_4	corelli_satan_12	0	1	no-letters	—
+mistral_large_4	corelli_satan_33	0	0	title	The Organist's Faith
+mistral_large_4	corelli_satan_57	0	1	chapter-heading	Chapter XI
+mistral_large_4	corelli_satan_57	0	0	title	The Garden Party in the Borough of Ashwick
+mistral_large_4	corelli_satan_83	0	0	md-heading	# Excerpt from *
+mistral_large_4	corelli_satan_83	1	1	md-heading	## Chapter VII: On the Nature of Being Known
+mistral_large_4	corelli_satan_83	1	2	scene-break	---
+mistral_large_4	corelli_satan_83	11	0	scene-break	---
+mistral_large_4	corelli_satan_83	23	0	scene-break	---
+mistral_large_4	corelli_satan_83	39	0	scene-break	---
+mistral_large_4	corelli_satan_83	1	0	title	The Cartographer's Wife*
+mistral_large_4	dickens_bleak_41	0	1	md-heading	## An Extract
+mistral_large_4	dickens_bleak_41	0	2	scene-break	---
+mistral_large_4	dickens_bleak_41	0	0	title	The Coroner's Summer
+mistral_large_4	dickens_bleak_57	0	1	md-heading	## An Excerpt
+mistral_large_4	dickens_bleak_57	0	2	scene-break	---
+mistral_large_4	dickens_bleak_57	0	0	title	The Burden of Watching
+mistral_large_4	dickens_expectations_63	1	0	scene-break	---
+mistral_large_4	dickens_expectations_7	1	0	scene-break	---
+mistral_large_4	dickens_oliver_58	3	1	scene-break	---
+mistral_large_4	dickens_oliver_85	0	0	title	The Letter That Trembled
+mistral_large_4	dickens_oliver_89	0	1	scene-break	##
+mistral_large_4	dickens_oliver_89	0	0	title	The Glimmering of Her Eyes
+mistral_large_4	dickens_oliver_89	1	0	title	An Excerpt
+mistral_large_4	doyle_hound_10	1	0	scene-break	---
+mistral_large_4	doyle_hound_3	0	1	md-heading	## Part I: The Gathering of the Pack
+mistral_large_4	doyle_hound_3	11	0	scene-break	---
+mistral_large_4	doyle_hound_3	34	0	scene-break	---
+mistral_large_4	doyle_hound_3	47	0	scene-break	---
+mistral_large_4	doyle_hound_3	0	0	title	The Hound of Thornwick Mere
+mistral_large_4	doyle_hound_36	50	0	scene-break	---
+mistral_large_4	doyle_lost_19	0	0	title	The Bamboo Grove at High Altitude
+mistral_large_4	doyle_lost_3	2	0	scene-break	---
+mistral_large_4	doyle_lost_45	0	1	md-heading	## Chapter VII: Concerning the Strappings and the Requisite Preparations
+mistral_large_4	doyle_lost_45	0	0	title	The Ascent of Mr. Aldric Pemberton
+mistral_large_4	doyle_micah_50	0	0	title	The Gunmaker's Vigil
+mistral_large_4	doyle_micah_82	0	0	title	The Crossing
+mistral_large_4	eliot_adam_129	0	0	title	The Road Between the Stones
+mistral_large_4	eliot_adam_29	0	1	md-heading	## Chapter XIV: What the War Leaves Behind
+mistral_large_4	eliot_adam_29	0	2	scene-break	---
+mistral_large_4	eliot_adam_29	91	1	scene-break	---
+mistral_large_4	eliot_adam_29	0	0	title	The Long Road Home
+mistral_large_4	eliot_daniel_117	0	1	md-heading	## An Excerpt
+mistral_large_4	eliot_daniel_117	0	0	title	The Season of Unspoken Things
+mistral_large_4	eliot_daniel_19	2	0	scene-break	---
+mistral_large_4	eliot_felix_54	3	1	scene-break	---
+mistral_large_4	forster_angels_33	0	1	md-heading	## Chapter the Twelfth
+mistral_large_4	forster_angels_33	5	0	scene-break	---
+mistral_large_4	forster_angels_33	13	0	scene-break	---
+mistral_large_4	forster_angels_33	30	0	scene-break	---
+mistral_large_4	forster_angels_33	70	1	scene-break	---
+mistral_large_4	forster_angels_33	0	0	title	The Botanist's Promise
+mistral_large_4	forster_angels_4	2	0	scene-break	---
+mistral_large_4	forster_howards_27	0	1	md-heading	## An Excerpt
+mistral_large_4	forster_howards_27	0	0	title	The Ledger of Unspoken Things
+mistral_large_4	forster_howards_36	1	0	scene-break	---
+mistral_large_4	forster_howards_50	1	0	scene-break	---
+mistral_large_4	forster_room_14	2	0	scene-break	---
+mistral_large_4	forster_room_18	0	1	md-heading	## An Excerpt
+mistral_large_4	forster_room_18	0	0	title	The Permission of Mrs. Harlow
+mistral_large_4	forster_room_2	2	0	scene-break	---
+mistral_large_4	gaskell_lovers_10	1	0	scene-break	---
+mistral_large_4	gaskell_lovers_42	0	1	md-heading	## An Excerpt
+mistral_large_4	gaskell_lovers_42	0	0	title	The Felt-Maker's Ledger
+mistral_large_4	gaskell_lovers_62	53	1	roman-numeral	II.
+mistral_large_4	gaskell_lovers_62	74	0	roman-numeral	III.
+mistral_large_4	gaskell_lovers_62	0	0	title	The Grammar School on the Hill
+mistral_large_4	gaskell_lovers_62	0	1	title	I. The Recitation
+mistral_large_4	gaskell_ruth_36	0	1	md-heading	## Part the First: Of Letters and Their Absence
+mistral_large_4	gaskell_ruth_36	26	0	scene-break	---
+mistral_large_4	gaskell_ruth_36	0	0	title	The Cartographer's Daughter
+mistral_large_4	gaskell_wives_34	0	1	md-heading	## Chapter VII
+mistral_large_4	gaskell_wives_34	0	2	md-heading	### In Which Mrs. Heseltine Considers the Matter of Education and Discovers
+mistral_large_4	gaskell_wives_34	1	1	scene-break	---
+mistral_large_4	gaskell_wives_34	0	0	title	The House on Thornleigh Lane
+mistral_large_4	gaskell_wives_34	1	0	title	That She Has Strong Opinions on the Subject
+mistral_large_4	gaskell_wives_60	3	1	scene-break	---
+mistral_large_4	gissing_unclassed_46	0	0	md-heading	# Excerpt from *The Furnace of Doubt*
+mistral_large_4	gissing_unclassed_46	0	1	md-heading	## Chapter VII: On the Nature of New Thoughts
+mistral_large_4	gissing_unclassed_52	0	1	scene-break	##
+mistral_large_4	gissing_warburton_5	0	1	md-heading	## Chapter Seven:
+mistral_large_4	gissing_warburton_5	0	0	title	The Moth Hours
+mistral_large_4	gissing_warburton_5	1	0	title	In Which a Young Lady Discovers What She Is Made Of
+mistral_large_4	gissing_women_15	0	0	title	An Education
+mistral_large_4	gissing_women_85	0	0	title	The Weight of Knowing
+mistral_large_4	gissing_women_88	4	1	scene-break	---
+mistral_large_4	haggard_mines_36	0	1	md-heading	## An Excerpt
+mistral_large_4	haggard_mines_36	0	0	title	The Burden of the Crown
+mistral_large_4	haggard_mines_49	0	1	md-heading	## Chapter the Seventeenth
+mistral_large_4	haggard_mines_49	28	0	scene-break	---
+mistral_large_4	haggard_mines_49	58	0	scene-break	---
+mistral_large_4	haggard_mines_49	0	0	title	The Mason's Mark
+mistral_large_4	haggard_mist_21	0	0	title	The Keeper of the Dike
+mistral_large_4	haggard_mist_55	0	1	md-heading	## An Excerpt
+mistral_large_4	haggard_mist_55	0	0	title	The Offering of the First Fruits
+mistral_large_4	haggard_mist_56	0	0	title	The Priest of the Broken Chalice
+mistral_large_4	haggard_mist_74	0	1	roman-numeral	I.
+mistral_large_4	haggard_mist_74	28	0	roman-numeral	II.
+mistral_large_4	haggard_mist_74	0	0	title	The Pool
+mistral_large_4	haggard_sheallan_31	0	0	title	The Reedsman's Vigil
+mistral_large_4	hardy_jude_17	60	1	scene-break	---
+mistral_large_4	hardy_jude_17	0	0	title	The Workshop of Unmarked Hours
+mistral_large_4	hardy_tess_1	0	1	chapter-heading	Chapter Seven
+mistral_large_4	hardy_tess_1	0	0	title	The Willow Patch
+mistral_large_4	hardy_tess_21	0	1	md-heading	## Part I: The Machine's Hunger
+mistral_large_4	hardy_tess_21	20	1	scene-break	---
+mistral_large_4	hardy_tess_21	20	2	md-heading	## Part II: The Field's Resistance
+mistral_large_4	hardy_tess_21	0	0	title	The Long Acre
+mistral_large_4	hardy_tess_27	0	1	md-heading	## An Excerpt
+mistral_large_4	hardy_tess_27	0	0	title	The Meadow's Inheritance
+mistral_large_4	james_ambassadors_48	1	0	scene-break	---
+mistral_large_4	james_ambassadors_68	0	0	title	The Weight of Evening
+mistral_large_4	james_muse_133	0	0	md-heading	# From *
+mistral_large_4	james_muse_133	1	1	md-heading	## Chapter VII: The Gentleman's Cottage
+mistral_large_4	james_muse_133	1	0	title	The Wolves of Millbrook Heath*
+mistral_large_4	james_muse_34	0	1	chapter-heading	Chapter XIV: On the Matter of Style
+mistral_large_4	james_muse_34	0	0	title	The Governess's Chair
+mistral_large_4	james_muse_63	2	0	scene-break	---
+mistral_large_4	kipling_captains_16	1	0	scene-break	---
+mistral_large_4	kipling_captains_5	0	0	title	The Tide's Accounting
+mistral_large_4	kipling_kim_19	55	1	scene-break	---
+mistral_large_4	kipling_kim_19	0	0	title	The High Pass of Khorung
+mistral_large_4	kipling_kim_45	1	1	md-heading	## Chapter the Twenty-Fourth
+mistral_large_4	kipling_kim_63	0	0	title	The Mountain of the Wise
+mistral_large_4	kipling_kim_65	2	0	scene-break	---
+mistral_large_4	kipling_light_18	0	1	chapter-heading	Chapter XIV: The Fellow Who Knew Too Much
+mistral_large_4	kipling_light_18	0	0	title	The Man Who Mastered the Engines
+mistral_large_4	kipling_light_29	0	1	md-heading	## Chapter the Seventh
+mistral_large_4	kipling_light_29	18	0	scene-break	---
+mistral_large_4	kipling_light_29	51	1	scene-break	---
+mistral_large_4	kipling_light_29	83	0	scene-break	---
+mistral_large_4	kipling_light_29	0	0	title	The Amber Room
+mistral_large_4	lytton_kenelm_117	0	1	md-heading	## An Excerpt
+mistral_large_4	lytton_kenelm_117	0	0	title	The Weight of Thirty Years
+mistral_large_4	lytton_kenelm_65	0	1	md-heading	## Part I: The Measurement of Distance
+mistral_large_4	lytton_kenelm_65	17	1	scene-break	---
+mistral_large_4	lytton_kenelm_65	24	1	scene-break	---
+mistral_large_4	lytton_kenelm_65	24	2	md-heading	## Part II: The Survey
+mistral_large_4	lytton_kenelm_65	50	1	scene-break	---
+mistral_large_4	lytton_kenelm_65	79	1	scene-break	---
+mistral_large_4	lytton_kenelm_65	0	0	title	The Cartographer's Daughter
+mistral_large_4	lytton_novel_109	1	0	scene-break	---
+mistral_large_4	lytton_novel_109	38	2	scene-break	---
+mistral_large_4	lytton_novel_194	0	1	scene-break	---
+mistral_large_4	lytton_novel_194	0	0	title	The Song the Clock Sang
+mistral_large_4	lytton_novel_70	0	0	title	The Vicar of Dunmow and Other Observations
+mistral_large_4	lytton_novel_76	0	0	title	The Morning Arrangement
+mistral_large_4	lytton_what_132	0	1	md-heading	## Chapter VII
+mistral_large_4	lytton_what_132	18	1	scene-break	---
+mistral_large_4	lytton_what_132	21	1	scene-break	---
+mistral_large_4	lytton_what_132	51	0	scene-break	---
+mistral_large_4	lytton_what_132	0	0	title	The Inheritance of Silence
+mistral_large_4	lytton_what_61	0	0	title	The Weaver's Debt
+mistral_large_4	meredith_feverel_101	0	1	md-heading	## An Excerpt
+mistral_large_4	meredith_feverel_101	0	0	title	The Season of Small Mercies
+mistral_large_4	meredith_feverel_6	0	1	md-heading	## An Excerpt
+mistral_large_4	meredith_feverel_6	0	2	scene-break	---
+mistral_large_4	meredith_feverel_6	0	0	title	The Cricket Green of St. Alban's
+mistral_large_4	meredith_feverel_87	0	0	title	The Season of Glass
+mistral_large_4	meredith_marriage_37	0	1	scene-break	---
+mistral_large_4	meredith_marriage_37	0	0	title	The Season of Waiting
+mistral_large_4	meredith_marriage_81	0	1	md-heading	## Chapter VII: On Speaking of What Should Not Be Spoken
+mistral_large_4	meredith_marriage_81	28	0	scene-break	---
+mistral_large_4	meredith_marriage_81	49	0	scene-break	---
+mistral_large_4	meredith_marriage_81	0	0	title	The Inheritance of Shadows
+mistral_large_4	meredith_marriage_88	0	1	chapter-heading	Chapter the Twelfth: Where the Earth Remembers
+mistral_large_4	meredith_marriage_88	0	0	title	The Glass Stables
+mistral_large_4	meredith_richmond_56	1	1	md-heading	## An Excerpt
+mistral_large_4	meredith_richmond_91	0	1	md-heading	## Chapter XIV: In Which a Bottle is Opened, and Several Matters Come to Light
+mistral_large_4	meredith_richmond_91	0	0	title	The Glass of the Squire
+mistral_large_4	morris_roots_33	0	1	md-heading	## An Excerpt
+mistral_large_4	morris_roots_33	74	1	scene-break	---
+mistral_large_4	morris_roots_33	0	0	title	The Road Through Thornwick
+mistral_large_4	morris_roots_7	0	0	title	The Cart of Small Devotions
+mistral_large_4	morris_roots_70	0	1	md-heading	## An Excerpt
+mistral_large_4	morris_roots_70	0	2	scene-break	---
+mistral_large_4	morris_roots_70	0	0	title	The Cartographer's Complaint
+mistral_large_4	morris_water_35	12	0	scene-break	---
+mistral_large_4	morris_water_35	24	0	scene-break	---
+mistral_large_4	morris_water_35	44	0	scene-break	---
+mistral_large_4	morris_water_48	0	1	chapter-heading	Chapter the Seventh: Concerning Sergeant Aldwick's Charge and the Squire's Woodland Reckoning
+mistral_large_4	morris_water_48	0	0	title	The Old Oak at Thornwick
+mistral_large_4	morris_water_83	0	0	title	The Girdle of Fair Eleanor
+mistral_large_4	morris_wood_22	0	1	md-heading	## An Excerpt
+mistral_large_4	morris_wood_22	0	0	title	The Widow's Inheritance
+mistral_large_4	morris_wood_32	0	1	md-heading	## An Excerpt
+mistral_large_4	morris_wood_32	0	0	title	The Lantern and the Road
+mistral_large_4	stevenson_arrow_20	12	0	scene-break	---
+mistral_large_4	stevenson_arrow_20	40	0	scene-break	---
+mistral_large_4	stevenson_arrow_20	60	0	scene-break	---
+mistral_large_4	stevenson_arrow_20	0	0	title	The Crossing at Thornwick
+mistral_large_4	stevenson_arrow_3	0	1	md-heading	## Chapter XIV: Of Arrows and Men
+mistral_large_4	stevenson_arrow_3	0	0	title	The Keeper of the Mersh
+mistral_large_4	stevenson_arrow_38	0	0	title	The Procession of St. Eustace's Day
+mistral_large_4	stevenson_arrow_4	0	1	md-heading	## An Excerpt
+mistral_large_4	stevenson_arrow_4	0	2	scene-break	---
+mistral_large_4	stevenson_arrow_4	0	0	title	The Ledger of Small Mercies
+mistral_large_4	stevenson_catriona_12	0	1	md-heading	## An Original Excerpt in the Manner of the Victorian and Edwardian Novel
+mistral_large_4	stevenson_catriona_12	0	2	scene-break	---
+mistral_large_4	stevenson_catriona_12	0	0	title	The Ledger of Holloway Street
+mistral_large_4	stevenson_catriona_4	0	1	md-heading	## An Excerpt
+mistral_large_4	stevenson_catriona_4	0	0	title	The Weight of Kindred
+mistral_large_4	stevenson_catriona_41	0	0	md-heading	# Part One: The Measure of Things
+mistral_large_4	stevenson_island_20	0	1	md-heading	## An Excerpt
+mistral_large_4	stevenson_island_20	0	0	title	The Ledger and the Tide
+mistral_large_4	stevenson_island_44	0	1	md-heading	## I.
+mistral_large_4	stevenson_island_44	0	0	title	The Ledge of Silence
+mistral_large_4	thackeray_esmond_39	1	0	scene-break	---
+mistral_large_4	thackeray_esmond_80	0	0	md-heading	# Chapter VII:
+mistral_large_4	thackeray_esmond_80	1	0	title	In Which Mr. Ashworth Makes a Discovery
+mistral_large_4	thackeray_esmond_95	1	0	scene-break	---
+mistral_large_4	thackeray_pendennis_117	1	1	md-heading	## Chapter XIV
+mistral_large_4	thackeray_pendennis_117	48	1	scene-break	---
+mistral_large_4	thackeray_pendennis_18	0	1	md-heading	## Chapter IX
+mistral_large_4	thackeray_pendennis_18	0	2	md-heading	### In which Mr. Aldridge Haversham discovers the curate's unexpected accomplishments, and their acquaintance is thereby placed upon a foundation more solid than either might have anticipated.
+mistral_large_4	thackeray_pendennis_18	1	0	scene-break	---
+mistral_large_4	thackeray_pendennis_18	0	0	title	The Gentleman's Blade
+mistral_large_4	thackeray_pendennis_183	0	0	title	The Outward Turning
+mistral_large_4	thackeray_virginians_207	2	0	scene-break	---
+mistral_large_4	trollope_angel_15	0	1	chapter-heading	Chapter XI
+mistral_large_4	trollope_angel_15	0	0	title	The Silver Inheritance
+mistral_large_4	trollope_angel_8	0	1	md-heading	## An Excerpt
+mistral_large_4	trollope_angel_8	0	2	scene-break	---
+mistral_large_4	trollope_angel_8	0	0	title	The Marble Hour
+mistral_large_4	trollope_phineas_21	5	0	scene-break	---
+mistral_large_4	trollope_phineas_21	35	0	scene-break	---
+mistral_large_4	trollope_phineas_52	0	1	md-heading	## An Excerpt
+mistral_large_4	trollope_phineas_52	0	0	title	The Measure of a Man
+mistral_large_4	trollope_phineas_93	0	1	md-heading	## Chapter XVII:
+mistral_large_4	trollope_phineas_93	0	0	title	The Cartographer's Silence
+mistral_large_4	trollope_phineas_93	1	0	title	Of Unfamiliar Shapes
+mistral_large_4	trollope_warden_31	1	0	scene-break	---
+mistral_large_4	trollope_warden_5	0	1	md-heading	## Chapter XVII
+mistral_large_4	trollope_warden_5	0	2	md-heading	### In Which the Corridors of Mercy Resound with Melancholy Harmony
+mistral_large_4	trollope_warden_5	0	0	title	The Warden's Reverie
+mistral_large_4	ward_ashe_3	0	1	md-heading	## An Excerpt
+mistral_large_4	ward_ashe_3	0	0	title	The Weight of Silence
+mistral_large_4	ward_ashe_32	0	0	md-heading	# Excerpt from *The Hollow of Thornwick*
+mistral_large_4	ward_ashe_32	0	1	md-heading	## Chapter XIV:
+mistral_large_4	ward_ashe_32	1	0	title	In Which the Mistress of Thornwick Learns What Cannot Be Said
+mistral_large_4	ward_ashe_65	1	0	scene-break	---
+mistral_large_4	ward_ashe_92	0	0	title	The Keeper's Ledger
+mistral_large_4	ward_harvest_14	0	0	title	The Weight of the Furrows
+mistral_large_4	ward_harvest_29	0	1	md-heading	## Chapter XIV
+mistral_large_4	ward_harvest_29	0	2	scene-break	---
+mistral_large_4	ward_harvest_29	20	0	scene-break	---
+mistral_large_4	ward_harvest_29	0	0	title	The Weight of Inheritance
+mistral_large_4	ward_harvest_46	0	0	title	The Ledger of Unspoken Things
+mistral_large_4	ward_milly_20	0	1	md-heading	## An Original Excerpt
+mistral_large_4	ward_milly_20	0	0	title	The Nightingale's Cage
+mistral_large_4	ward_milly_30	0	1	roman-numeral	I.
+mistral_large_4	ward_milly_30	62	0	roman-numeral	II.
+mistral_large_4	ward_milly_30	0	0	title	The Cut of the Hayfield
+mistral_large_4	ward_milly_4	9	0	scene-break	---
+mistral_large_4	ward_milly_4	26	0	scene-break	---
+mistral_large_4	ward_milly_4	40	1	scene-break	---
+mistral_large_4	ward_milly_4	0	0	title	The Little Engine's Rest
