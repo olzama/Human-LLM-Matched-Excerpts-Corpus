@@ -1,0 +1,4 @@
+# Coordination of bare verbs sharing their complements ("bought and sold the house").
+# Add to a coordination list to treat each verb as its own clause in split mode.
+v-v_crd-fin-ncj_c
+v-v_crd-nfin-ncj_c

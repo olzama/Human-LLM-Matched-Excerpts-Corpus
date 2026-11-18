@@ -1,0 +1,7 @@
+# Finite and non-finite VP coordination (pairs with clauses/finite+nonfinite.txt).
+vp-vp_crd-fin-t_c
+vp-vp_crd-fin-m_c
+vp-vp_crd-fin-im_c
+vp-vp_crd-nfin-t_c
+vp-vp_crd-nfin-m_c
+vp-vp_crd-nfin-im_c

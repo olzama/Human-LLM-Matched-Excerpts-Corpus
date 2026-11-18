@@ -23,6 +23,20 @@ Definitions
                ancestor (leftmost on ties). Clause lengths therefore add up to
                the sentence length whenever the sentence has a clause.
                Sentences without any clause node get n_clauses = 0.
+  clause head --clause-heads lists lexical rules/types (e.g. inverted
+               auxiliaries, quotative inversion) whose word heads a clause
+               without a clause-building construction; the clause is the word's
+               maximal projection, with headedness read from ERG rule names.
+  coordination --coordination lists coordination constructions (default:
+               finite VP coordination); --coordination-mode decides how they
+               count. 'one' (default): a coordinated VP is part of one clause.
+               'split': each conjunct after the first is a clause of its own;
+               the first conjunct stays in the clause above together with
+               shared material such as the subject (n conjuncts add n-1
+               clauses; with no clause above, every conjunct is a clause).
+               Chained coordinations are expanded into all their conjuncts.
+               The coord_extra_clauses column counts the clauses added this
+               way. Settings are written to <out>.settings.json.
                Clause markers listed in --clause-markers (lexical types such
                as complementizers 'cm_*', or marker constructions) are
                counted with the clause they introduce.
@@ -40,6 +54,7 @@ n_constructions. Unparsed sentences have parsed=0 and empty measures.
 """
 import argparse
 import csv
+import json
 import re
 from fnmatch import fnmatch
 from pathlib import Path
@@ -64,7 +79,24 @@ def read_list(path):
     return names
 
 
-def analyse(deriv_str, clause_rules, marker_patterns=()):
+def head_index(rule, n_daughters):
+    """Index of the head daughter, read from ERG rule naming: 'hd...' (hd-cmp,
+    hd_xcmp, hdn-aj, unary hd_...) has the head first; 'x-hd...' (sb-hd, aj-hd,
+    flr-hd, sp-hd, aj-hdn, np-hdn) has it second; lexical rules and root nodes
+    are unary-headed. Other rules (coordination, fragments, mrk-nh) are treated
+    as non-headed (None)."""
+    if n_daughters == 1 and (rule.endswith('lr') or rule.startswith(('hd', 'root'))):
+        return 0
+    if rule.startswith('hd'):
+        return 0
+    first = rule.split('_', 1)[0]
+    if re.fullmatch(r'[a-z]+-hdn?', first) and n_daughters >= 2:
+        return 1
+    return None
+
+
+def analyse(deriv_str, clause_rules, marker_patterns=(), coord_rules=frozenset(), coord_mode='one',
+            head_patterns=()):
     root = derivation.from_string(deriv_str)
     # parent links and word order
     parent, words, order = {}, [], []
@@ -88,7 +120,7 @@ def analyse(deriv_str, clause_rules, marker_patterns=()):
     max_all = max_phr = 0
     walk(root, 0, 0, [])
     n_constr = 0
-    clause_nodes = []
+    clause_nodes, coord_nodes = [], []
     stack = [root]
     while stack:
         node = stack.pop()
@@ -99,7 +131,61 @@ def analyse(deriv_str, clause_rules, marker_patterns=()):
                     n_constr += 1
                 if child.entity in clause_rules:
                     clause_nodes.append(child)
+                if child.entity in coord_rules:
+                    coord_nodes.append(child)
     clause_ids = {id(c) for c in clause_nodes}
+
+    # Clause heads: a word with a listed lexical rule or lexical type (e.g. an
+    # inverted auxiliary) heads a clause: its maximal projection.
+    if head_patterns:
+        for pt in root.preterminals():
+            chain, n = [pt.type or ''], pt
+            while parent.get(id(n)) is not None and parent[id(n)].entity.endswith('lr'):
+                n = parent[id(n)]; chain.append(n.entity)
+            if not any(fnmatch(x, pat) for x in chain for pat in head_patterns):
+                continue
+            top = n
+            while True:
+                par = parent.get(id(top))
+                if par is None or par is root or id(top) in clause_ids:
+                    break
+                kids = [k for k in par.daughters if isinstance(k, derivation.UDFNode)]
+                hi = head_index(par.entity, len(kids))
+                if hi is None or kids[hi] is not top:
+                    break
+                top = par
+            if id(top) not in clause_ids and top is not root:
+                clause_nodes.append(top)
+                clause_ids.add(id(top))
+
+    # Coordination, split mode: each conjunct after the first of a listed
+    # coordination becomes a clause of its own; the first conjunct stays in the
+    # clause above, with any shared material (e.g. the subject). Chained
+    # coordinations (-m variants) are expanded into all their conjuncts. With no
+    # clause above the coordination, every conjunct becomes a clause.
+    coord_extra = 0
+    if coord_mode == 'split':
+        def conjuncts(v):
+            out = []
+            for d in v.daughters:
+                if isinstance(d, derivation.UDFNode):
+                    out.extend(conjuncts(d) if d.entity in coord_rules else [d])
+            return out
+        for v in coord_nodes:
+            if parent.get(id(v)) is not None and parent[id(v)].entity in coord_rules:
+                continue                          # part of a larger coordination, expanded there
+            cj = conjuncts(v)
+            if len(cj) < 2:
+                continue
+            above = parent.get(id(v))
+            while above is not None and id(above) not in clause_ids:
+                above = parent.get(id(above))
+            new = cj[1:] if above is not None else cj
+            for d in new:
+                if id(d) not in clause_ids:
+                    clause_nodes.append(d)
+                    clause_ids.add(id(d))
+            coord_extra += len(cj) - 1
 
     def depth_below(anc, target):
         """Distance from anc down to target, or None if target is not below anc."""
@@ -175,7 +261,7 @@ def analyse(deriv_str, clause_rules, marker_patterns=()):
     return {
         'n_words': len(words), 'n_clauses': len(clause_lengths), 'clause_lengths': clause_lengths,
         'word_lengths': word_lengths, 'deriv_depth': max_all, 'phrase_depth': max_phr,
-        'n_constructions': n_constr, 'segments': segments,
+        'n_constructions': n_constr, 'segments': segments, 'coord_extra': coord_extra,
     }
 
 
@@ -187,14 +273,24 @@ def main():
     ap.add_argument('--clause-markers', default=str(HERE / 'clauses' / 'markers.txt'),
                     help='file listing marker constructions whose marker words join the marked clause '
                          "(use an empty file to turn this off)")
+    ap.add_argument('--clause-heads', default=str(HERE / 'clauses' / 'clause-heads.txt'),
+                    help='file listing lexical rules/types whose word heads a clause of its own '
+                         '(e.g. inverted auxiliaries); use an empty file to turn this off')
+    ap.add_argument('--coordination', default=str(HERE / 'clauses' / 'coordination-vp-finite.txt'),
+                    help='file listing coordination constructions whose conjuncts may count as clauses')
+    ap.add_argument('--coordination-mode', choices=['one', 'split'], default='one',
+                    help="one: a coordination of listed constructions stays within one clause; "
+                         "split: each conjunct after the first is a clause of its own")
     ap.add_argument('--out', required=True, help='output TSV')
     a = ap.parse_args()
+    coord_rules = read_list(a.coordination) if a.coordination else set()
+    head_patterns = sorted(read_list(a.clause_heads)) if a.clause_heads else []
 
     clause_rules = read_list(a.clauses)
     marker_rules = read_list(a.clause_markers) if a.clause_markers else set()
     cols = ['corpus', 'excerpt', 'work', 'i_id', 'sent_pos', 'input_words', 'parsed', 'n_words', 'n_clauses',
             'clause_lengths', 'mean_clause_len', 'word_lengths', 'mean_word_len', 'deriv_depth', 'phrase_depth',
-            'n_constructions']
+            'n_constructions', 'coord_extra_clauses']
     n = parsed = 0
     with open(a.out, 'w', newline='', encoding='utf-8') as fh:
         w = csv.writer(fh, delimiter='\t')
@@ -207,7 +303,8 @@ def main():
                        'parsed': 0}
                 res = item.results()
                 if res:
-                    m = analyse(res[0]['derivation'], clause_rules, marker_rules)
+                    m = analyse(res[0]['derivation'], clause_rules, marker_rules, coord_rules, a.coordination_mode,
+                                head_patterns)
                     cl, wl = m['clause_lengths'], m['word_lengths']
                     row.update(parsed=1, n_words=m['n_words'], n_clauses=m['n_clauses'],
                                clause_lengths=','.join(map(str, cl)),
@@ -215,12 +312,18 @@ def main():
                                word_lengths=','.join(map(str, wl)),
                                mean_word_len=f'{sum(wl) / len(wl):.3f}' if wl else '',
                                deriv_depth=m['deriv_depth'], phrase_depth=m['phrase_depth'],
-                               n_constructions=m['n_constructions'])
+                               n_constructions=m['n_constructions'], coord_extra_clauses=m['coord_extra'])
                     parsed += 1
                 w.writerow([row.get(c, '') for c in cols])
                 n += 1
-    print(f'{n} sentences ({parsed} parsed) -> {a.out}; clause constructions from {a.clauses}: '
-          f'{", ".join(sorted(clause_rules))}')
+    settings = {'clauses_file': a.clauses, 'clause_constructions': sorted(clause_rules),
+                'clause_markers_file': a.clause_markers, 'clause_markers': sorted(marker_rules),
+                'coordination_file': a.coordination, 'coordination_constructions': sorted(coord_rules),
+                'coordination_mode': a.coordination_mode, 'clause_heads_file': a.clause_heads,
+                'clause_heads': head_patterns, 'profiles': a.profiles}
+    json.dump(settings, open(a.out + '.settings.json', 'w'), indent=1)
+    print(f'{n} sentences ({parsed} parsed) -> {a.out} (settings in {a.out}.settings.json); '
+          f'coordination mode {a.coordination_mode}')
 
 
 if __name__ == '__main__':

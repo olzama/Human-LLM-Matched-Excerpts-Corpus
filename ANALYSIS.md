@@ -88,13 +88,25 @@ python analysis/sentence_measures.py --profiles <merged profiles root> --out sen
     [--clauses analysis/clauses/finite.txt] [--clause-markers analysis/clauses/markers.txt]
 ```
 
-What counts as a clause is set entirely by the `--clauses` file: one construction name per line.
-`clauses/finite.txt` lists the constructions that build finite clauses (subject–head, main and
-non-main; a finite clause whose subject is a gap on SLASH; imperatives);
-`clauses/finite+nonfinite.txt` adds non-finite and reduced clauses. Each word (a non-punctuation
-lexical item) belongs to its nearest clause; a word outside every clause, such as a sentence-initial
-modifier that combines with the clause above the subject–head node, belongs to the clause nearest
-to it in the tree. Clause lengths therefore add up to the sentence length. Words listed in
-`--clause-markers` (complementizers, by lexical type `cm_*`) are counted with the clause they
-introduce. Columns include the number of words and clauses, clause lengths, word lengths in
-characters, derivation depth and the number of constructions; see the script's help.
+What counts as a clause is set by plain-text lists in `analysis/clauses/` (one name or pattern per
+line; shell wildcards allowed), so the definition can be changed without touching code. Each run
+writes the settings it used to `<out>.settings.json`.
+
+| Option (default file) | What it lists | Effect |
+|---|---|---|
+| `--clauses` (`finite.txt`) | constructions that build a clause | each such node is a clause; `finite+nonfinite.txt` adds non-finite and reduced clauses |
+| `--clause-heads` (`clause-heads.txt`) | lexical rules or types whose word heads a clause on its own | the word's maximal projection is a clause: subject–auxiliary, quotative, conditional and locative inversion, which the ERG handles lexically rather than with a clause construction |
+| `--clause-markers` (`markers.txt`) | complementizers (lexical types `cm_*`), marker and filler–head constructions | their words are counted with the clause they introduce: *whether*, relative pronouns and wh-fillers go with their clause |
+| `--coordination` (`coordination-vp-finite.txt`) with `--coordination-mode one` or `split` | coordination constructions | `one`: coordinated VPs under one subject form one clause; `split`: each conjunct after the first is a clause, the first stays with the shared subject |
+
+`coordination-vp-all.txt` adds non-finite VP coordination; `coordination-v.txt` lists coordination
+of bare verbs sharing their complements, to add when wanted. Maximal projections follow head
+daughters, read from ERG rule names (`hd-…` heads first; `sb-hd`, `aj-hd`, `flr-hd`, `sp-hd` heads
+second).
+
+Each word (a non-punctuation lexical item) belongs to its nearest clause; a word outside every
+clause, such as a sentence-initial modifier that combines with the clause above the subject–head
+node, belongs to the clause nearest to it in the tree. Clause lengths therefore add up to the
+sentence length. Columns include the number of words and clauses, clause lengths, word lengths in
+characters, derivation depth, the number of constructions and the number of clauses added by
+coordination; see the script's help.

@@ -7,3 +7,6 @@
 #     construction join the clause in its other daughter.
 cm_*              # complementizers: that, whether, if, for, to (lexical types cm_...)
 mrk-nh_cl_c       # marker + clause construction
+flr-hd_*          # filler-head constructions: the filler (relative or wh-phrase,
+                  # topicalized phrase) belongs to the clause in the head daughter,
+                  # whose gap it fills through SLASH

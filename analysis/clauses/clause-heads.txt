@@ -1,0 +1,10 @@
+# Clause heads: a word whose lexical rule or lexical type matches an entry here
+# heads a clause of its own, even without a clause-building construction. The
+# clause is the word's maximal projection (climbing while the node is the head
+# daughter of its parent; headedness is read from the ERG rule names). Used by
+# sentence_measures.py --clause-heads. Shell-style wildcards allowed.
+v_aux-sb-inv_dlr        # subject-auxiliary inversion: questions ("what had Elias said")
+v_aux-sb-inv-ell_dlr    # elliptical inversion ("so had she")
+v_cond-inv_dlr          # conditional inversion ("had I known")
+v_inv-quot_dlr          # quotative inversion ("said the Bishop")
+v_np_locinv-*           # locative inversion ("in the corner stood a chair")

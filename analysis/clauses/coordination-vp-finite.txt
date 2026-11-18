@@ -1,0 +1,6 @@
+# Coordination constructions whose conjuncts count as separate clauses in
+# --coordination-mode split (sentence_measures.py). One name per line; '#' comments.
+# Finite VP coordination under a shared subject ("he fetched a breath and looked wise").
+vp-vp_crd-fin-t_c     # top of the coordination
+vp-vp_crd-fin-m_c     # middle conjuncts of a longer coordination
+vp-vp_crd-fin-im_c
