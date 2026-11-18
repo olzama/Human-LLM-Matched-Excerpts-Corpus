@@ -53,6 +53,26 @@ MPLBACKEND=Agg python analysis/diversity.py <out>/frequencies.json --output-dir 
     "ClaudeSonnet5.5-llm,Gemini3.1Pro-llm,GPT-6Sol-llm,MistralLarge4-llm"
 ```
 
-Diversity indices depend on how much text they are computed from. The subcorpora are matched in
-words but differ in sentence count and coverage, so compare diversity on equal-size samples
-(the `--learning` curves show how far each index is from leveling off).
+## Diversity at equal sample size
+
+Diversity indices grow with the amount of text they are computed from, and the subcorpora yield
+different numbers of type tokens (they are matched in words but differ in sentence count, sentence
+length and coverage). `analysis/diversity_equal.py` compares them at the same number of type
+tokens N (by default 80% of the smallest subcorpus total):
+
+```bash
+python analysis/diversity_equal.py <out>/counts-by-excerpt.jsonl --out <dir> \
+    --phenomena constr lextype --split-punct
+```
+
+Each of `--reps` repetitions (default 1,000) resamples excerpts with replacement, using the same
+excerpt names for every subcorpus (a paired bootstrap: excerpts are matched by novel), pools each
+subcorpus's counts, and draws N type tokens without replacement, averaging the indices over
+`--draws` such draws. All subcorpora in a repetition are drawn with the same random seed, so
+differences between them are not inflated by drawing noise. Output per phenomenon: each
+subcorpus's mean Shannon and Simpson index with a 95% interval, all LLMs pooled as one more
+entry, and the human-minus-LLM differences with 95% intervals (Markdown, JSON and a plot).
+
+`--unpaired` resamples each subcorpus's own excerpts independently, for data whose excerpts are
+not matched (such as the pilot sample); `--no-bootstrap` only subsamples. With
+`--no-bootstrap --size` equal to a subcorpus's total, its result equals `diversity.py`'s.
