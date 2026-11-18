@@ -104,6 +104,14 @@ of bare verbs sharing their complements, to add when wanted. Maximal projections
 daughters, read from ERG rule names (`hd-…` heads first; `sb-hd`, `aj-hd`, `flr-hd`, `sp-hd` heads
 second).
 
+Two definitions of a word are reported side by side, so results can be compared with Lenka's thesis:
+lexical items of the derivation (`n_words`, `clause_lengths`, `word_syllables`, …) and the thesis's
+tokens (`n_tokens`, `tok_clause_lengths`, `tok_syllables`, …: whitespace split of the sentence,
+normalized as in the thesis). Each token belongs to the clause of the lexical item it overlaps most
+in character offsets. Syllable and phoneme counts use the thesis's method (CMU Pronouncing
+Dictionary via NLTK, with its fallback heuristic), ported unchanged in `analysis/syllables.py`;
+this needs `nltk.download('cmudict')` once.
+
 Each word (a non-punctuation lexical item) belongs to its nearest clause; a word outside every
 clause, such as a sentence-initial modifier that combines with the clause above the subject–head
 node, belongs to the clause nearest to it in the tree. Clause lengths therefore add up to the

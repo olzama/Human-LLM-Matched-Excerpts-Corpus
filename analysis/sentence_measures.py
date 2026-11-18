@@ -45,6 +45,13 @@ Definitions
                node (constructions, lexical rules and the lexical entry).
   phrase_depth the same path length counting syntactic constructions only.
 
+Two word definitions are reported side by side. Lexical items (above) give
+n_words, clause_lengths, word_syllables etc. The thesis tokens (whitespace
+split of the sentence, normalized as in Lenka's thesis; see syllables.py) give
+n_tokens, tok_clause_lengths, tok_syllables etc.; each token belongs to the
+clause of the lexical item it overlaps most in character offsets. Syllables
+and phonemes use the thesis's CMU-dictionary method with its fallback.
+
 Columns: corpus, excerpt, work, i_id, sent_pos (position in the corpus's
 sentence_list as <entry>.<piece>), input_words (whitespace tokens of the
 input), parsed, n_words, n_clauses, clause_lengths (comma-separated, in
@@ -54,12 +61,16 @@ n_constructions. Unparsed sentences have parsed=0 and empty measures.
 """
 import argparse
 import csv
+import sys
 import json
 import re
 from fnmatch import fnmatch
 from pathlib import Path
 
 from delphin import derivation, itsdb
+
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from syllables import count_phonemes, count_syllables, thesis_tokens  # noqa: E402
 
 HERE = Path(__file__).resolve().parent
 
@@ -108,7 +119,7 @@ def analyse(deriv_str, clause_rules, marker_patterns=(), coord_rules=frozenset()
             max_all = max(max_all, depth_all + 1)
             max_phr = max(max_phr, depth_phr)
             if not is_punct_type(node.type):
-                form = ''.join(t.form for t in node.terminals())
+                form = ' '.join(t.form for t in node.terminals())
                 words.append((node, form))
             return
         for child in node.daughters:
@@ -258,11 +269,36 @@ def analyse(deriv_str, clause_rules, marker_patterns=(), coord_rules=frozenset()
     clause_lengths = [lengths[c] for c in ordered]
     segments = [[words[i][1] for i in sorted(assign) if assign[i] == c] for c in ordered]
     word_lengths = [len(re.sub(r'[\W_]', '', f)) for _, f in words]
+    clause_index = {c: k for k, c in enumerate(ordered)}
+    word_info = []
+    for i, (w, f) in enumerate(words):
+        spans = [(int(a), int(b)) for t in w.terminals() for tok in t.tokens
+                 for a, b in re.findall(r'\+FROM \\?"(\d+)\\?" \+TO \\?"(\d+)\\?"', tok.tfs or '')]
+        start = min(a for a, _ in spans) if spans else None
+        end = max(b for _, b in spans) if spans else None
+        word_info.append({'form': f, 'start': start, 'end': end,
+                          'clause': clause_index.get(assign.get(i))})
     return {
         'n_words': len(words), 'n_clauses': len(clause_lengths), 'clause_lengths': clause_lengths,
         'word_lengths': word_lengths, 'deriv_depth': max_all, 'phrase_depth': max_phr,
         'n_constructions': n_constr, 'segments': segments, 'coord_extra': coord_extra,
+        'word_info': word_info,
     }
+
+
+def token_measures(sentence, word_info, n_clauses):
+    """Thesis tokens of the sentence, each assigned to the clause of the lexical
+    item it overlaps most in character offsets (nearest item if none overlaps)."""
+    toks = thesis_tokens(sentence)
+    located = [w for w in word_info if w['start'] is not None and w['clause'] is not None]
+    lengths = [0] * n_clauses
+    for _, a, b in toks:
+        if not located or not n_clauses:
+            break
+        best = max(located, key=lambda w: (min(b, w['end']) - max(a, w['start']),
+                                           -abs((w['start'] + w['end']) / 2 - (a + b) / 2)))
+        lengths[best['clause']] += 1
+    return toks, [x for x in lengths if x > 0]
 
 
 def main():
@@ -290,7 +326,10 @@ def main():
     marker_rules = read_list(a.clause_markers) if a.clause_markers else set()
     cols = ['corpus', 'excerpt', 'work', 'i_id', 'sent_pos', 'input_words', 'parsed', 'n_words', 'n_clauses',
             'clause_lengths', 'mean_clause_len', 'word_lengths', 'mean_word_len', 'deriv_depth', 'phrase_depth',
-            'n_constructions', 'coord_extra_clauses']
+            'n_constructions', 'coord_extra_clauses',
+            'word_syllables', 'mean_word_syll', 'word_phonemes',
+            'n_tokens', 'tok_clause_lengths', 'mean_tok_clause_len', 'tok_syllables', 'mean_tok_syll',
+            'tok_phonemes']
     n = parsed = 0
     with open(a.out, 'w', newline='', encoding='utf-8') as fh:
         w = csv.writer(fh, delimiter='\t')
@@ -313,6 +352,20 @@ def main():
                                mean_word_len=f'{sum(wl) / len(wl):.3f}' if wl else '',
                                deriv_depth=m['deriv_depth'], phrase_depth=m['phrase_depth'],
                                n_constructions=m['n_constructions'], coord_extra_clauses=m['coord_extra'])
+                    # a multi-word lexical item is counted word by word and summed
+                    syl = [sum(count_syllables(x) for x in w['form'].split()) for w in m['word_info']]
+                    syl = [x for x in syl if x > 0]
+                    row.update(word_syllables=','.join(map(str, syl)),
+                               mean_word_syll=f'{sum(syl) / len(syl):.3f}' if syl else '',
+                               word_phonemes=','.join(str(sum(count_phonemes(x) for x in w['form'].split()))
+                                                      for w in m['word_info']))
+                    toks, tcl = token_measures(item['i-input'], m['word_info'], m['n_clauses'])
+                    tsyl = [count_syllables(t) for t, _, _ in toks]
+                    row.update(n_tokens=len(toks), tok_clause_lengths=','.join(map(str, tcl)),
+                               mean_tok_clause_len=f'{sum(tcl) / len(tcl):.3f}' if tcl else '',
+                               tok_syllables=','.join(map(str, tsyl)),
+                               mean_tok_syll=f'{sum(tsyl) / len(tsyl):.3f}' if tsyl else '',
+                               tok_phonemes=','.join(str(count_phonemes(t)) for t, _, _ in toks))
                     parsed += 1
                 w.writerow([row.get(c, '') for c in cols])
                 n += 1
