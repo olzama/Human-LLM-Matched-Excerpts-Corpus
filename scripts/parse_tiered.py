@@ -23,6 +23,7 @@ import sys
 import time
 from collections import Counter, defaultdict
 from concurrent.futures import ProcessPoolExecutor, as_completed
+from datetime import datetime
 from pathlib import Path
 
 from delphin import ace, itsdb, tsdb
@@ -77,7 +78,8 @@ def ace_options(a):
             f'--max-chart-megabytes={a.chart_mb}', f'--max-unpack-megabytes={a.unpack_mb}']
 
 
-def parse_one(src, dst, opts, retry, executable=ACE, retry_outcomes=('resource', 'crash'), max_length=None):
+def parse_one(src, dst, opts, retry, executable=ACE, retry_outcomes=('resource', 'crash'), max_length=None,
+              flush=10, log_sentences=False):
     """Copy (a subset of) src's items to dst and parse them. Returns (dst, n_items, secs)."""
     t0 = time.time()
     if dst.exists():
@@ -99,9 +101,26 @@ def parse_one(src, dst, opts, retry, executable=ACE, retry_outcomes=('resource',
     dst.parent.mkdir(parents=True, exist_ok=True)
     tsdb.initialize_database(dst, schema, files=True)
     tsdb.write(dst, 'item', items, fields=schema['item'])
+    callback = None
+    if log_sentences:
+        len_ix = [f.name for f in schema['item']].index('i-length')
+        words = {int(r[0]): int(r[len_ix]) for r in items}
+        print(f"START {stamp()} {dst} items " + ' '.join(f'{i}:{n}' for i, n in words.items()), flush=True)
+
+        def callback(resp):
+            iid = int(resp['keys']['i-id'])
+            err = resp.get('error') or '; '.join(str(e) for e in resp.get('ERRORS', []))
+            row = {'readings': resp.get('readings'), 'error': err}
+            print(f"SENT {stamp()} {dst} i-id={iid} words={words.get(iid)} outcome={outcome(row)} "
+                  f"secs={int(resp.get('total') or 0) / 1000:.0f} mem_gb={int(resp.get('others') or 0) / 2**30:.1f} "
+                  f"error={err!r}", flush=True)
     with ace.ACEParser(GRAMMAR, cmdargs=opts, executable=executable, stderr=open('/dev/null', 'w')) as cpu:
-        itsdb.TestSuite(dst).process(cpu, gzip=True, buffer_size=10)
+        itsdb.TestSuite(dst).process(cpu, gzip=True, buffer_size=flush, callback=callback)
     return dst, len(items), time.time() - t0
+
+
+def stamp():
+    return datetime.now().strftime('%Y-%m-%dT%H:%M:%S')
 
 
 def cmd_run(a):
@@ -121,7 +140,8 @@ def cmd_run(a):
     with ProcessPoolExecutor(max_workers=a.workers) as ex:
         exe = OOM_FIRST if a.oom_first else ACE
         outs = tuple(a.retry_outcomes.split(','))
-        futs = {ex.submit(parse_one, s, d, opts, a.retry, exe, outs, a.max_length): d for s, d in jobs}
+        futs = {ex.submit(parse_one, s, d, opts, a.retry, exe, outs, a.max_length, a.flush, a.log_sentences): d
+                for s, d in jobs}
         for f in as_completed(futs):
             done += 1
             try:
@@ -238,6 +258,40 @@ def cmd_combine(a):
               f"({counts['item']} items, {counts['parse']} parses, {counts['result']} results)")
 
 
+def cmd_sentences(a):
+    """Sentence-level view of a run log written with --log-sentences."""
+    started, done, last = {}, {}, {}
+    for line in open(a.log, encoding='utf-8'):
+        if line.startswith('START '):
+            _, ts, prof, _, *pairs = line.split()
+            started[prof] = [(int(i), int(n)) for i, n in (p.split(':') for p in pairs)]
+            last[prof] = ts
+        elif line.startswith('SENT '):
+            parts = line.rstrip('\n').split(' ', 3)
+            ts, prof, rest = parts[1], parts[2], parts[3]
+            f = dict(kv.split('=', 1) for kv in rest.split(' ', 5)[:5])
+            f['error'] = rest.split(' error=', 1)[1] if ' error=' in rest else ''
+            done.setdefault(prof, {})[int(f['i-id'])] = (ts, f)
+            last[prof] = ts
+    now = datetime.now()
+    print('time                 i-id       words  outcome   secs  mem_gb  profile')
+    rows = [(ts, iid, f, prof) for prof, d in done.items() for iid, (ts, f) in d.items()]
+    for ts, iid, f, prof in sorted(rows)[-a.last:]:
+        print(f"{ts}  {iid:<9}  {f['words']:>5}  {f['outcome']:<8} {f['secs']:>5}  {f['mem_gb']:>6}  {prof}")
+    running = []
+    for prof, items in started.items():
+        todo = [(i, n) for i, n in items if i not in done.get(prof, {})]
+        if todo:
+            since = datetime.strptime(last[prof], '%Y-%m-%dT%H:%M:%S')
+            running.append((prof, todo[0], len(todo), (now - since).total_seconds() / 60))
+    if running:
+        print('\nin progress (the first unfinished item of each started profile):')
+        for prof, (iid, n), left, mins in running:
+            print(f'  {iid} ({n} words), running {mins:.0f} min; {left} item(s) left in {prof}')
+    outs = Counter(f['outcome'] for d in done.values() for _, f in d.values())
+    print(f"\nfinished items: {sum(outs.values())} ({', '.join(f'{k} {v}' for k, v in outs.most_common())})")
+
+
 def cmd_report(a):
     by_corpus = defaultdict(Counter)
     errors = Counter()
@@ -272,6 +326,10 @@ def main():
     r.add_argument('--max-words', type=int, default=1000)
     r.add_argument('--oom-first', action='store_true',
                    help='start ACE via ace-oom-first.sh (oom_score_adj=1000)')
+    r.add_argument('--flush', type=int, default=10,
+                   help='write results to disk every N items (1 for long sentences)')
+    r.add_argument('--log-sentences', action='store_true',
+                   help='log a line per profile start and per finished item (see the sentences command)')
     r.add_argument('--max-length', type=int,
                    help='with --retry: only re-parse items of at most this many words')
     r.add_argument('--retry-outcomes', default='resource,crash',
@@ -287,10 +345,13 @@ def main():
     c = sub.add_parser('combine')
     c.add_argument('--src', required=True, help='merged root: <src>/<corpus>/<excerpt>/')
     c.add_argument('--dst', required=True, help='output root: <dst>/<corpus>/')
+    se = sub.add_parser('sentences', help='sentence-level progress from a --log-sentences run log')
+    se.add_argument('log')
+    se.add_argument('--last', type=int, default=30, help='show the N most recent finished items')
     rp = sub.add_parser('report')
     rp.add_argument('dir')
     a = ap.parse_args()
-    {'run': cmd_run, 'merge': cmd_merge, 'combine': cmd_combine, 'report': cmd_report}[a.cmd](a)
+    {'run': cmd_run, 'merge': cmd_merge, 'combine': cmd_combine, 'sentences': cmd_sentences, 'report': cmd_report}[a.cmd](a)
 
 
 if __name__ == '__main__':

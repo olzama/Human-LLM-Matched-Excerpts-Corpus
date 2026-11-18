@@ -47,6 +47,10 @@ All commands run from the repository root.
    `scripts/ace-oom-first.sh`, which makes it the kernel's first choice to kill if parallel
    jobs exhaust memory; the killed item is recorded as a crash and retried. A run can be
    restarted: finished profiles are skipped and interrupted ones are re-parsed.
+   For long sentences, `--flush 1` writes each result to disk as soon as it is finished, and
+   `--log-sentences` logs every finished item (length, outcome, seconds, peak memory, error);
+   `parse_tiered.py sentences LOG` turns that log into a sentence-level progress report,
+   including which item each running profile is on and for how long.
 
    **Forwarding failures.** `scripts/forward_failures.py` runs on the coordinating machine
    while the first pass is under way. Every 30 minutes it copies finished result profiles back
