@@ -78,7 +78,7 @@ are never retried at a setting already known to fail for their length.
 |---|---|---|
 | ≤ 45 | 16 GB, 120 s | 28 GB, 300 s → 60 GB, 600 s |
 | 46–60 | 28 GB, 300 s | 60 GB, 600 s |
-| 61–65 | 120 GB, 1,800 s | — |
+| 61–65 | 120 GB, 3,600 s | — |
 | over 65 | not parsed | — |
 
 The upper limits come from tests on sentences that had failed at lower settings: at 60 GB, one of
