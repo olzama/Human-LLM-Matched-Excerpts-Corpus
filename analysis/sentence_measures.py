@@ -49,7 +49,9 @@ Two word definitions are reported side by side. Lexical items (above) give
 n_words, clause_lengths, word_syllables etc. The thesis tokens (whitespace
 split of the sentence, normalized as in Lenka's thesis; see syllables.py) give
 n_tokens, tok_clause_lengths, tok_syllables etc.; each token belongs to the
-clause of the lexical item it overlaps most in character offsets. Syllables
+clause of the lexical item it overlaps most in character offsets.
+clause_syllables / tok_clause_syllables give each clause's mean syllables
+per word, in the order of clause_lengths / tok_clause_lengths. Syllables
 and phonemes use the thesis's CMU-dictionary method with its fallback.
 
 Columns: corpus, excerpt, work, i_id, sent_pos (position in the corpus's
@@ -292,13 +294,16 @@ def token_measures(sentence, word_info, n_clauses):
     toks = thesis_tokens(sentence)
     located = [w for w in word_info if w['start'] is not None and w['clause'] is not None]
     lengths = [0] * n_clauses
-    for _, a, b in toks:
+    syl = [[] for _ in range(n_clauses)]
+    for t, a, b in toks:
         if not located or not n_clauses:
             break
         best = max(located, key=lambda w: (min(b, w['end']) - max(a, w['start']),
                                            -abs((w['start'] + w['end']) / 2 - (a + b) / 2)))
         lengths[best['clause']] += 1
-    return toks, [x for x in lengths if x > 0]
+        syl[best['clause']].append(count_syllables(t))
+    keep = [k for k in range(n_clauses) if lengths[k] > 0]
+    return toks, [lengths[k] for k in keep], [sum(syl[k]) / len(syl[k]) for k in keep]
 
 
 
@@ -353,7 +358,7 @@ def main():
             'n_constructions', 'coord_extra_clauses',
             'word_syllables', 'mean_word_syll', 'word_phonemes',
             'n_tokens', 'tok_clause_lengths', 'mean_tok_clause_len', 'tok_syllables', 'mean_tok_syll',
-            'tok_phonemes']
+            'tok_phonemes', 'clause_syllables', 'tok_clause_syllables']
     n = parsed = 0
     with open(a.out, 'w', newline='', encoding='utf-8') as fh:
         w = csv.writer(fh, delimiter='\t')
@@ -383,7 +388,13 @@ def main():
                                mean_word_syll=f'{sum(syl) / len(syl):.3f}' if syl else '',
                                word_phonemes=','.join(str(sum(count_phonemes(x) for x in w['form'].split()))
                                                       for w in m['word_info']))
-                    toks, tcl = token_measures(item['i-input'], m['word_info'], m['n_clauses'])
+                    toks, tcl, tcs = token_measures(item['i-input'], m['word_info'], m['n_clauses'])
+                    per_clause = [[] for _ in range(m['n_clauses'])]
+                    for wi in m['word_info']:
+                        if wi['clause'] is not None:
+                            per_clause[wi['clause']].append(sum(count_syllables(x) for x in wi['form'].split()))
+                    row.update(clause_syllables=','.join(f'{sum(v) / len(v):.3f}' for v in per_clause if v),
+                               tok_clause_syllables=','.join(f'{x:.3f}' for x in tcs))
                     tsyl = [count_syllables(t) for t, _, _ in toks]
                     row.update(n_tokens=len(toks), tok_clause_lengths=','.join(map(str, tcl)),
                                mean_tok_clause_len=f'{sum(tcl) / len(tcl):.3f}' if tcl else '',

@@ -137,3 +137,27 @@ python analysis/plot_distributions.py --counts <dir>/counts/counts-by-excerpt.js
 Plots: processing by work; construction rank-frequency; the most frequent constructions and
 lexical types per subcorpus; clauses per sentence; mean clause length by sentence length in
 clauses (Menzerath–Altmann, sentence → clause); mean clauses per sentence by work.
+
+## Equal-size samples for partial results
+
+`analysis/equalize.py` builds an equal-size sample from the counts and per-sentence table while
+parsing is incomplete: only excerpts finished in every included subcorpus (matched by novel), the
+same number of sentences per subcorpus (random sample down to the smallest), and type counts thinned
+at random to the same total per subcorpus. `--exclude` leaves out a subcorpus that has barely been
+parsed. The other analysis scripts run unchanged on its output.
+
+## Differences between subcorpora
+
+`analysis/model_differences.py` shows (1) the constructions or lexical types on which the subcorpora
+differ most: each subcorpus's rate relative to the mean of all, as a log2 ratio with 95% intervals
+from resampling excerpts; and (2) a map of excerpts placed by their type profile (PCA of
+square-rooted shares), with the types that separate them most. `--punct xpunct` excludes
+punctuation, as in llm-syntax; so does `plot_distributions.py --punct xpunct`, which also plots
+word classes (lexical types grouped by ERG prefix) and syllables per word.
+
+## Menzerath–Altmann law
+
+`analysis/mal.py` applies Lenka's thesis method (grouped means per excerpt, Spearman's rho, log-log
+fit of y = a·x^−b with R² and RMSE; the fitting code is ported from the thesis) at four levels:
+sentence → word in syllables (thesis tokens and lexical items), sentence → clause in words, and
+clause → word in syllables. It writes per-excerpt results, a summary, and plots.

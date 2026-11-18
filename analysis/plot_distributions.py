@@ -10,15 +10,20 @@ always visible as such.
 Inputs: counts-by-excerpt.jsonl (count_types.py), the per-sentence TSV
 (sentence_measures.py), data/items. Output: PNGs and a processing table.
 
+--punct xpunct excludes punctuation from the construction and lexical-type
+plots (shares recomputed over the remaining types), as in llm-syntax.
+
 Plots:
   processing-by-work.png        share of each work's sentences processed, per subcorpus
   rank-frequency-constr.png     construction rank-frequency (log-log)
+  word-classes.png              share of word classes (lexical types grouped by prefix)
   top-constr.png / top-lextype.png
                                 relative frequency of the most frequent types
   clauses-per-sentence.png      distribution of the number of clauses per sentence
   mal-sentence-clause.png       mean clause length by sentence length in clauses
                                 (the Menzerath-Altmann relation at that level)
   clauses-by-work.png           mean clauses per sentence by work and subcorpus
+  syllables-per-word.png        distribution of syllables per word, lexical items and thesis tokens
 """
 import argparse
 import csv
@@ -33,6 +38,7 @@ import numpy as np  # noqa: E402
 
 HERE = Path(__file__).resolve().parent
 INK, MUTED, GRID = '#1d1c1a', '#5f5d58', '#dedbd2'
+PUNCT_TITLE = {'all': '', 'xpunct': ' (punctuation excluded)', 'punct': ' (punctuation only)'}
 
 
 def load_sources(path):
@@ -51,6 +57,16 @@ def totals_from_items(items_dir):
             sent[c] += 1; exc[c].add(ex)
             wsent[(c, w)] += 1; wexc[(c, w)].add(ex)
     return sent, {c: len(v) for c, v in exc.items()}, wsent, {k: len(v) for k, v in wexc.items()}
+
+
+def is_punct_type(tname):
+    """Same rule as diversity.py (llm-syntax)."""
+    t = tname.lower()
+    return t.startswith('pt') or ('pct' in t) or t.endswith('plr')
+
+
+def keep_type(t, punct):
+    return punct == 'all' or (punct == 'xpunct') != is_punct_type(t)
 
 
 def style(ax):
@@ -75,6 +91,8 @@ def main():
     ap.add_argument('--scope', default='TEST: partial data, sentences of up to 45 words only',
                     help='label printed on every plot')
     ap.add_argument('--top', type=int, default=25)
+    ap.add_argument('--punct', choices=['all', 'xpunct', 'punct'], default='all',
+                    help='type-based plots over all types, excluding punctuation, or punctuation only')
     a = ap.parse_args()
 
     sources = load_sources(a.sources)
@@ -91,7 +109,7 @@ def main():
         done_exc[c].add(r['excerpt']); done_sent[c] += r['sentences']; done_parsed[c] += r['parsed']
         wdone_exc[(c, w)].add(r['excerpt']); wdone_sent[(c, w)] += r['sentences']
         for p in freq:
-            freq[p][c].update(r.get(p, {}))
+            freq[p][c].update({t: v for t, v in r.get(p, {}).items() if keep_type(t, a.punct)})
     corpora = [c for c in sources if c in tot_sent]
     present = [c for c in corpora if done_parsed[c] > 0]
 
@@ -135,7 +153,7 @@ def main():
         v = np.array(sorted(freq['constr'][c].values(), reverse=True), dtype=float)
         ax.loglog(np.arange(1, len(v) + 1), v / v.sum(), color=sources[c]['color'], linewidth=2, label=label(c))
     ax.set_xlabel('rank', fontsize=9, color=INK); ax.set_ylabel('relative frequency', fontsize=9, color=INK)
-    ax.set_title('Constructions: rank-frequency', fontsize=11, color=INK)
+    ax.set_title('Constructions: rank-frequency' + PUNCT_TITLE[a.punct], fontsize=11, color=INK)
     style(ax); ax.legend(fontsize=7, frameon=False, loc='lower left')
     note(fig, a.scope)
     fig.tight_layout(rect=(0, 0.03, 1, 1)); fig.savefig(out / 'rank-frequency-constr.png', dpi=150); plt.close(fig)
@@ -156,10 +174,50 @@ def main():
                        color=sources[c]['color'], label=label(c), zorder=3)
         ax.set_yticks(range(len(top))); ax.set_yticklabels(top, fontsize=7.5, color=INK)
         ax.set_xlabel(f'% of all {title.lower()} in the subcorpus', fontsize=9, color=INK)
-        ax.set_title(f'{title}: the {a.top} most frequent overall', fontsize=11, color=INK)
+        ax.set_title(f'{title}: the {a.top} most frequent overall' + PUNCT_TITLE[a.punct], fontsize=11, color=INK)
         style(ax); ax.legend(fontsize=7, frameon=False, loc='lower right')
         note(fig, a.scope)
         fig.tight_layout(rect=(0, 0.02, 1, 1)); fig.savefig(out / f'top-{p}.png', dpi=150); plt.close(fig)
+
+    # 3b. lexical types grouped into word classes by their ERG prefix
+    def word_class(t):
+        if t.startswith('n_-_pr'):
+            return 'pronoun'
+        if t.startswith('n_-_pn') or t.startswith('n_np_pn'):
+            return 'proper name'
+        for pre, name in (('n_', 'noun'), ('v_', 'verb'), ('aj_', 'adjective'), ('av_', 'adverb'),
+                          ('p_', 'preposition'), ('pp_', 'preposition'), ('d_', 'determiner'),
+                          ('c_', 'conjunction'), ('cm_', 'complementizer'), ('pt_', 'punctuation')):
+            if t.startswith(pre):
+                return name
+        return 'other'
+    classes = ['noun', 'proper name', 'pronoun', 'verb', 'adjective', 'adverb', 'preposition', 'determiner',
+               'conjunction', 'complementizer', 'punctuation', 'other']
+    wc = {}
+    for c in present:
+        cnt = Counter()
+        for t, v in freq['lextype'][c].items():
+            cnt[word_class(t)] += v
+        n = sum(cnt.values())
+        wc[c] = {k: 100 * cnt[k] / n for k in classes}
+    fig, ax = plt.subplots(figsize=(8.5, 0.42 * len(classes) + 1.8))
+    order = sorted(classes, key=lambda k: np.mean([wc[c][k] for c in present]))
+    offs = np.linspace(-0.25, 0.25, len(present)) if len(present) > 1 else [0]
+    for k, c in enumerate(present):
+        ax.scatter([wc[c][x] for x in order], np.arange(len(order)) + offs[k], s=30, color=sources[c]['color'],
+                   label=label(c), zorder=3, marker='*' if sources[c]['group'] == 'human' else 'o')
+    ax.set_yticks(range(len(order))); ax.set_yticklabels(order, fontsize=9, color=INK)
+    ax.set_xlabel('% of all words in the subcorpus', fontsize=9, color=INK)
+    ax.set_title('Word classes (lexical types grouped by their ERG prefix)', fontsize=11, color=INK)
+    style(ax)
+    ax.legend(fontsize=7, frameon=False, loc='upper center', bbox_to_anchor=(0.5, -0.12), ncol=1)
+    note(fig, a.scope)
+    fig.tight_layout(rect=(0, 0.02, 1, 1)); fig.savefig(out / 'word-classes.png', dpi=150, bbox_inches='tight')
+    plt.close(fig)
+    with open(out / 'word-classes.tsv', 'w') as fh:
+        fh.write('class\t' + '\t'.join(present) + '\n')
+        for k in classes:
+            fh.write(k + '\t' + '\t'.join(f'{wc[c][k]:.3f}' for c in present) + '\n')
 
     # sentence-level measures
     rows = [r for r in csv.DictReader(open(a.sentences, encoding='utf-8'), delimiter='\t') if r['parsed'] == '1']
@@ -219,6 +277,29 @@ def main():
     ax.set_title('Clauses per sentence by work (n = parsed sentences)', fontsize=10, color=INK)
     note(fig, a.scope)
     fig.tight_layout(rect=(0, 0.02, 1, 1)); fig.savefig(out / 'clauses-by-work.png', dpi=150); plt.close(fig)
+
+    # 7. syllables per word, for both word definitions
+    if rows and 'word_syllables' in rows[0]:
+        fig, axes = plt.subplots(1, 2, figsize=(11, 4.6), sharey=True)
+        for ax, col, title in ((axes[0], 'word_syllables', 'lexical items'), (axes[1], 'tok_syllables', 'thesis tokens')):
+            for c in present:
+                cnt = Counter()
+                for r in by_c[c]:
+                    for x in (r.get(col) or '').split(','):
+                        if x:
+                            cnt[min(int(x), 5)] += 1
+                n = sum(cnt.values())
+                if not n:
+                    continue
+                ax.plot(range(1, 6), [100 * cnt.get(k, 0) / n for k in range(1, 6)], marker='o', markersize=4,
+                        linewidth=2, color=sources[c]['color'], label=f"{label(c, True)} ({n:,} words)")
+            ax.set_xticks(range(1, 6)); ax.set_xticklabels(['1', '2', '3', '4', '5+'])
+            ax.set_xlabel('syllables per word', fontsize=9, color=INK)
+            ax.set_title(f'Syllables per word: {title}', fontsize=10, color=INK)
+            style(ax); ax.legend(fontsize=7.5, frameon=False)
+        axes[0].set_ylabel('% of words', fontsize=9, color=INK)
+        note(fig, a.scope + '; syllables counted with the CMU dictionary as in the thesis')
+        fig.tight_layout(rect=(0, 0.03, 1, 1)); fig.savefig(out / 'syllables-per-word.png', dpi=150); plt.close(fig)
 
     print(open(out / 'processing.md').read())
     print('plots in', out)
