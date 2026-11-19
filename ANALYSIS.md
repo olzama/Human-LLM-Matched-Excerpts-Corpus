@@ -170,3 +170,15 @@ of Gude et al., ACL 2026). For constructions and lexical types (punctuation excl
 type's LLM-vs-human log2 ratio in news against the same ratio here, reports Spearman correlations
 (overall and per model) and how many types deviate in the same or opposite direction, and computes
 Shannon and Simpson diversity for every source of both corpora at one common sample size.
+
+## Diversity profiles and where the gap lies
+
+`analysis/diversity_equal.py` also reports a diversity profile of Hill numbers (effective numbers
+of types, `--q`, default 0, 0.5, 1, 1.5, 2, 3) with the human-to-model ratio at each order and a
+paired-bootstrap interval. Low orders weigh rare types (q = 0 is richness); high orders are driven
+by the frequent types (q = 2 is the inverse of Simpson's concentration).
+
+`analysis/diversity_contrib.py` splits the human-minus-model Shannon gap into exact per-type
+contributions, sums them by frequency band (bands by the mean share over all sources), and lists
+the types that contribute most, with paired-bootstrap intervals. Run it on an equal-size sample
+from `equalize.py`.

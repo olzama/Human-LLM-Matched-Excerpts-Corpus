@@ -29,12 +29,19 @@ pool is smaller than N is redrawn.
 for data whose excerpts are not matched (e.g. the pilot sample).
 
 Indices use the same definitions as diversity.py: Shannon H = -sum p ln p;
-Simpson D = 1 - sum p^2. --no-bootstrap keeps the full subcorpora and only
+Simpson D = 1 - sum p^2. In addition, a diversity profile of Hill numbers
+(effective numbers of types) at the orders given by --q:
+  D_q = (sum p^q)^(1/(1-q)),  D_1 = exp(H).
+q = 0 is richness (every type counts equally, however rare); as q grows the
+profile is driven more and more by the frequent types (D_2 = 1/sum p^2, the
+inverse of Simpson's concentration). Where two sources' profiles converge, they
+differ only in their rarer types. --no-bootstrap keeps the full subcorpora and only
 subsamples (plain rarefaction).
 
 Input: counts-by-excerpt.jsonl from count_types.py. Outputs in --out:
 diversity-equal-<phenomenon><suffix>.{md,json,png} with suffix '' (all
-types), '_punct' or '_xpunct'.
+types), '_punct' or '_xpunct', and diversity-profile-<phenomenon><suffix>.png
+(Hill numbers by q, and each LLM's profile relative to the human one).
 """
 import argparse
 import json
@@ -77,10 +84,18 @@ def matrix(per_excerpt, excerpts, types):
     return m
 
 
-def indices(counts):
+def hill(p, q):
+    if q == 1:
+        return float(np.exp(-(p * np.log(p)).sum()))
+    if q == 0:
+        return float(len(p))
+    return float((p ** q).sum() ** (1.0 / (1.0 - q)))
+
+
+def indices(counts, qs=()):
     n = counts.sum()
     p = counts[counts > 0] / n
-    return -(p * np.log(p)).sum(), 1.0 - (p * p).sum()
+    return (-(p * np.log(p)).sum(), 1.0 - (p * p).sum()) + tuple(hill(p, q) for q in qs)
 
 
 def run(a, phenom, punct, sources, out):
@@ -107,6 +122,7 @@ def run(a, phenom, punct, sources, out):
     names = corpora + ([POOLED] if llms else [])
     sh = {k: [] for k in names}
     si = {k: [] for k in names}
+    hq = {q: {k: [] for k in names} for q in a.q}
     reps = 0
     while reps < a.reps:
         if a.no_bootstrap:
@@ -125,9 +141,11 @@ def run(a, phenom, punct, sources, out):
         seed = int(rng.integers(2 ** 63))
         for k, pool in pools.items():
             draw_rng = np.random.default_rng(seed)
-            vals = [indices(draw_rng.multivariate_hypergeometric(pool, n)) for _ in range(a.draws)]
+            vals = [indices(draw_rng.multivariate_hypergeometric(pool, n), a.q) for _ in range(a.draws)]
             sh[k].append(float(np.mean([v[0] for v in vals])))
             si[k].append(float(np.mean([v[1] for v in vals])))
+            for j, q in enumerate(a.q):
+                hq[q][k].append(float(np.mean([v[2 + j] for v in vals])))
         reps += 1
 
     ci = lambda v: (float(np.mean(v)), float(np.percentile(v, 2.5)), float(np.percentile(v, 97.5)))
@@ -144,6 +162,11 @@ def run(a, phenom, punct, sources, out):
             result['differences_vs_human'][idx_name] = {
                 k: ci(h - np.array(store[k])) for k in names if k not in humans}
 
+    result['hill'] = {str(q): {k: ci(hq[q][k]) for k in names} for q in a.q}
+    if humans:
+        # ratio of effective numbers, human / source: 1.0 = equally diverse at this order
+        result['hill_ratio_human_over'] = {str(q): {k: ci(np.array(hq[q][humans[0]]) / np.array(hq[q][k]))
+                                                     for k in names if k not in humans} for q in a.q}
     suffix = {'all': '', 'punct': '_punct', 'xpunct': '_xpunct'}[punct]
     stem = out / f'diversity-equal-{phenom}{suffix}'
     json.dump(result, open(f'{stem}.json', 'w'), indent=1)
@@ -160,7 +183,20 @@ def run(a, phenom, punct, sources, out):
             for k in result['differences_vs_human']['shannon']:
                 s, d = result['differences_vs_human']['shannon'][k], result['differences_vs_human']['simpson'][k]
                 fh.write(f'| {label(k)} | {s[0]:+.3f} ({s[1]:+.3f} to {s[2]:+.3f}) | {d[0]:+.4f} ({d[1]:+.4f} to {d[2]:+.4f}) |\n')
+        fh.write(f'\nDiversity profile: Hill numbers (effective number of types; q = 0 is richness, '
+                 f'q = 1 is exp(Shannon), q = 2 is 1/sum p²), mean over repetitions\n\n')
+        fh.write('| Source | ' + ' | '.join(f'q = {q:g}' for q in a.q) + ' |\n|---|' + '---:|' * len(a.q) + '\n')
+        for k in names:
+            fh.write(f'| {label(k)} | ' + ' | '.join(f"{result['hill'][str(q)][k][0]:,.1f}" for q in a.q) + ' |\n')
+        if humans:
+            fh.write('\n| Human / source (95% interval) | ' + ' | '.join(f'q = {q:g}' for q in a.q)
+                     + ' |\n|---|' + '---|' * len(a.q) + '\n')
+            for k in result['hill_ratio_human_over'][str(a.q[0])]:
+                fh.write(f'| {label(k)} | ' + ' | '.join(
+                    '{:.3f} ({:.3f}–{:.3f})'.format(*result['hill_ratio_human_over'][str(q)][k]) for q in a.q) + ' |\n')
     plot(result, names, sources, label, f'{stem}.png', phenom, suffix)
+    plot_profile(result, names, sources, label, str(out / f'diversity-profile-{phenom}{suffix}.png'), phenom, suffix,
+                 a.q, a.scope)
     print(f'{phenom}{suffix}: N={n:,}; wrote {stem}.md/.json/.png')
 
 
@@ -192,6 +228,52 @@ def plot(result, names, sources, label, path, phenom, suffix):
     plt.close(fig)
 
 
+def plot_profile(result, names, sources, label, path, phenom, suffix, qs, scope):
+    import matplotlib
+    matplotlib.use('Agg')
+    import matplotlib.pyplot as plt
+    title = {'constr': 'Constructions', 'lextype': 'Lexical types', 'lexrule': 'Lexical rules',
+             'lexentries': 'Lexical entries'}.get(phenom, phenom)
+    title += {'': '', '_punct': ' (punctuation only)', '_xpunct': ' (punctuation excluded)'}[suffix]
+    srcs = [k for k in names if k in sources]
+    fig, axes = plt.subplots(1, 2, figsize=(12, 4.8))
+    ax = axes[0]
+    for k in srcs:
+        human = sources[k]['group'] == 'human'
+        m = [result['hill'][str(q)][k] for q in qs]
+        ax.plot(qs, [v[0] for v in m], marker='*' if human else 'o', markersize=9 if human else 5,
+                color=sources[k]['color'], linewidth=2, label=label(k))
+        ax.fill_between(qs, [v[1] for v in m], [v[2] for v in m], color=sources[k]['color'], alpha=0.15, linewidth=0)
+    ax.set_yscale('log')
+    ax.set_xlabel('order q (0 = every type counts equally; higher = frequent types dominate)', fontsize=9)
+    ax.set_ylabel('effective number of types (log scale)', fontsize=9)
+    ax.set_title('Diversity profile', fontsize=10)
+    ax.legend(fontsize=8, frameon=False)
+    ax = axes[1]
+    if 'hill_ratio_human_over' in result:
+        ax.axhline(1, color='#52514e', linewidth=0.9, linestyle='--')
+        for k in [k for k in srcs if sources[k]['group'] != 'human']:
+            m = [result['hill_ratio_human_over'][str(q)][k] for q in qs]
+            ax.plot(qs, [v[0] for v in m], marker='o', markersize=5, color=sources[k]['color'], linewidth=2,
+                    label=label(k))
+            ax.fill_between(qs, [v[1] for v in m], [v[2] for v in m], color=sources[k]['color'], alpha=0.18,
+                            linewidth=0)
+        ax.set_xlabel('order q', fontsize=9)
+        ax.set_ylabel('human ÷ model effective number of types', fontsize=9)
+        ax.set_title('How much more diverse the human texts are, by order (1 = equal)', fontsize=10)
+        ax.legend(fontsize=8, frameon=False)
+    for ax in axes:
+        ax.spines['top'].set_visible(False); ax.spines['right'].set_visible(False)
+        ax.grid(linestyle='--', alpha=0.3); ax.set_xticks(qs)
+    fig.suptitle(f"{title}: diversity profile at {result['sample_size']:,} type tokens per sample "
+                 f"(95% intervals: paired bootstrap)", fontsize=11)
+    if scope:
+        fig.text(0.01, 0.005, scope, fontsize=7.5, color='#5f5d58')
+    fig.tight_layout(rect=(0, 0.03, 1, 0.95))
+    plt.savefig(path, dpi=150)
+    plt.close(fig)
+
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument('counts', help='counts-by-excerpt.jsonl from count_types.py')
@@ -210,6 +292,9 @@ def main():
                     help="resample each subcorpus's own excerpts independently (when excerpts are not matched)")
     ap.add_argument('--min-shared', type=int, default=50,
                     help='refuse a paired bootstrap on fewer shared excerpts than this')
+    ap.add_argument('--q', type=float, nargs='+', default=[0, 0.5, 1, 1.5, 2, 3],
+                    help='orders of the Hill-number diversity profile')
+    ap.add_argument('--scope', default='', help='note printed under the profile plot')
     ap.add_argument('--seed', type=int, default=1337)
     a = ap.parse_args()
     sources = {k: v for k, v in json.load(open(a.sources)).items() if not k.startswith('_')}
