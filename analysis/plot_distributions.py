@@ -253,7 +253,7 @@ def main():
     ax.set_ylabel('mean clause length in words', fontsize=9, color=INK)
     ax.set_title('Menzerath–Altmann: sentence → clause (groups with ≥ 20 sentences)', fontsize=10, color=INK)
     style(ax); ax.legend(fontsize=7.5, frameon=False)
-    note(fig, a.scope + '; truncation at 45 words caps clause length for sentences with many clauses')
+    note(fig, a.scope + '; sentences over 65 words are not parsed, which caps clause length for sentences with many clauses')
     fig.tight_layout(rect=(0, 0.03, 1, 1)); fig.savefig(out / 'mal-sentence-clause.png', dpi=150); plt.close(fig)
 
     # 6. mean clauses per sentence by work
